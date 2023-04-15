@@ -1,0 +1,214 @@
+#contactDetails {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2%;
+    padding-right: 2%;
+    width: 100%;
+    transition: all 0.3s ease-out, opacity 0.3s cubic-bezier(1, -0.25, .74, .75);
+    overflow: hidden;
+}
+
+#contactDetails.collapsed {
+    width: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease-out, opacity 0.1s ease-out;
+}
+
+.collapseContactDetailsButton {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#contactDetails > section, #contactDetails > form {
+    margin-top: 2rem;
+}
+
+#contactDetails > section.hidden, #contactDetails > form.hidden {
+    display: none;
+}
+
+#contactInfoContainer {
+    align-self: center;
+}
+
+#contactForm {
+    align-items: center;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 20rem;
+    padding-top: 2rem;
+    width: 100%;
+}
+
+#contactForm label {
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+}
+
+#contactForm > div:nth-child(1) {
+    align-self: start;
+    display: flex;
+    width: 97.5%;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+
+#contactForm div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#contactForm input {
+
+}
+
+
+#contactCircle {
+    align-self: center;
+    background: var(--bg-focus);
+    border-radius: 50%;
+    color: var(--text-contrast);
+    display: flex;
+    font-size: 3rem;
+    width: 8rem;
+    height: 8rem;
+    align-items: center;
+    justify-content: center;
+}
+
+#contactCircle.hidden {
+    display: none;
+}
+
+#contactName {
+    align-self: center;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--text-inactive);
+    overflow-wrap: anywhere;
+}
+
+#contactName.hidden {
+    display: none;
+}
+
+#mailIcon, #phoneIcon, #addressIcon, #calendarIcon {
+    padding-right: 0.75rem;
+    float: left;
+}
+
+#emailAddress, #phoneNumber, #address, #date {
+    font-size: 1.3rem;
+    color: var(--text-inactive);
+    padding-bottom: 2rem;
+    overflow-wrap: anywhere;
+}
+
+.contactIcons {
+    user-select: none;
+    filter: invert(40%);
+}
+
+.contactButtons {
+    position: absolute;
+    display: flex;
+    gap: 1rem;
+    bottom: 3%;
+    right: 3%;
+}
+
+.contactButtons > button {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 1.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.contactButtons button.hidden {
+    display: none;
+}
+
+.contactButtons button > img {
+    filter: invert(100%);
+}
+
+#deleteContactButtonHint {
+    bottom: 2rem;
+    position: absolute;
+    transition: all 0.2s ease-in-out;
+}
+
+#deleteContactButtonHint.hidden {
+    opacity: 0;
+    bottom: 0;
+    transition: all 0s;
+}
+
+#confirmDeleteContactButton {
+    background-color: var(--bg-emphasis);
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+#confirmDeleteContactButton:hover {
+    background-color: var(--bg-emphasis-dark);
+}
+
+#cancelDeleteContactButton {
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+#cancelContactButton, #deleteContactButton {
+    background-color: var(--bg-emphasis);
+}
+
+#cancelContactButton:hover, #deleteContactButton:hover {
+    background-color: var(--bg-emphasis-dark);
+}
+
+
+@media only screen and (max-width: 600px) {
+    #contactDetails > section, #contactDetails > form {
+        margin-top: 1rem;
+    }
+
+    #contactForm {
+        padding-top: 0;
+    }
+
+    #contactForm > div:nth-child(1) {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    #contactForm label {
+        margin: 0;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .contactButtons button > img {
+        filter: invert(0%);
+    }
+
+    .contactIcons {
+        filter: invert(60%);
+    }
+
+    .collapseContactDetailsButton > img {
+        filter: invert(100%);
+    }
+}
+
+
+
