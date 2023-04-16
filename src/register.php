@@ -1,8 +1,6 @@
 <?php
 include_once('core/header.php');
 include_once ('core/db.php');
-
-$error = null;
 ?>
 
 
@@ -137,24 +135,24 @@ $error = null;
             <form class="text-start" action="register.php" method="post">
                 <div class="mb-3">
                     <label for="email" class="form-label">University Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
                     <div id="emailHelp" class="form-text">University email!</div>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="fullName" name="fullName">
+                    <input type="text" class="form-control" id="fullName" name="fullName" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">University ID Number</label>
-                    <input type="number" class="form-control" id="universityId" name="universityId">
+                    <input type="number" class="form-control" id="universityId" name="universityId" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password">
+                    <input type="password" class="form-control" id="password" name="password" required>
                 </div>
                 <div class="mb-3">
                     <label for="confirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                 </div>
                 <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Register</button>
             </form>

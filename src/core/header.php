@@ -3,6 +3,8 @@
 //Include the DB
 include 'core/db.php';
 
+$error = null;
+
 //Start the session
 session_start();
 ?>
