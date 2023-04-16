@@ -51,6 +51,28 @@ $error = null;
             }
         }
 
+        //Check that the university id is valid
+        if ($error == null) {
+
+
+            //Create the statement.
+            $statement = 'SELECT COUNT(*) FROM universities WHERE UniversityID = :universityId';
+
+            $stmt = $dbConn->prepare($statement);
+            $stmt->bindParam(':universityId', $universityId);
+
+            //Execute the statement
+            $stmt->execute();
+
+            //Get the result
+            $count = $stmt->fetchColumn();
+
+            //If its not zero, it already exists!
+            if ($count == 0) {
+                $error = "Invalid university id.";
+            }
+        }
+
 
         //Bind so we dont have any sql injection issues!
         if ($error == null) {
@@ -72,7 +94,23 @@ $error = null;
             $stmt->execute();
         }
 
+        //If theres no errors, set the session!
+        if ($error == null) {
 
+            //Create the statement.
+            $statement = 'SELECT UserID FROM Users WHERE Email = :email';
+
+            $stmt = $dbConn->prepare($statement);
+            $stmt->bindParam(':email', $email);
+
+            //Execute the statement
+            $stmt->execute();
+
+            //Get the result
+            $userId = $stmt->fetchColumn();
+
+            $_SESSION["user_id"] = $userId;
+        }
 
 
         //If theres no errors then go back to the index!
