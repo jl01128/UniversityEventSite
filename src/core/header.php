@@ -26,7 +26,7 @@
             <a class="nav-link disabled">Disabled</a>
           </li>
         </ul>
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link" href="login.php">Login</a>
           </li>
