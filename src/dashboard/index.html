@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>University Event Planner</title>
+    <link href="styles/auth.css" rel="stylesheet">
+    <script src="scripts/md5.js" type="text/javascript"></script>
+    <script defer src="scripts/auth.js" type="text/javascript"></script>
+    <link href="public/icons/favicon.svg" rel="icon" type="image/x-icon">
+</head>
+<body>
+
+<section id="authCard">
+    <img alt="Contact Manager icon" draggable="false" id="logo" src="public/icons/contacts.svg" width="64">
+    <h1>University Events</h1>
+    <div class="toggleButtonGroup" id="authToggle">
+        <div id="loginToggle" onclick="setLogin()" role="button">Login</div>
+        <div id="registerToggle" onclick="setRegister()" role="button">Register</div>
+    </div>
+    <span id="loginResult">👀</span>
+    <div id="registerInputs">
+        <input class="textField" id="firstNameInput" placeholder="First Name" type="text">
+        <input class="textField" id="lastNameInput" placeholder="Last Name" type="text">
+    </div>
+    <input class="textField" id="emailInput" onkeyup="validateEmailField(value)" placeholder="Email" type="text">
+    <span id="emailInputHint">📧</span>
+    <input class="textField" id="passwordInput" onkeyup="validatePasswordField(value)" placeholder="Password"
+           type="password">
+    <span id="passwordInputHint">🔑</span>
+    <button class="button" id="loginButton" onclick="doLogin();" type="button">LOGIN</button>
+    <button class="button" id="registerButton" onclick="doRegister();" type="button">REGISTER</button>
+</section>
+
+</body>
+</html>
