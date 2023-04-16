@@ -1,6 +1,8 @@
 <?php
 include_once('core/header.php');
 include_once ('core/db.php');
+
+$error = null;
 ?>
 
 
@@ -10,37 +12,82 @@ include_once ('core/db.php');
     //Check if its a form call!
     if (isset($_POST['submit'])) {
 
-        header('Location: index.php');
+        //header('Location: index.php');
 
         $submit = trim($_POST['submit']);
         $email = trim($_POST['email']);
         $password = trim($_POST['password']);
+        $confirmPassword = trim($_POST['confirmPassword']);
         $fullName = trim($_POST['fullName']);
         $universityId = trim($_POST['universityId']);
 
 
-        //Create the password.
-        $sql = 'INSERT INTO Users (Email, Password, FullName, UniversityID) VALUES (:email, :password, :fullName, :universityID)';
 
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        //Bind so we dont have any sql injection issues!
-        $stmt = $dbConn->prepare($sql);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashedPassword);
-        $stmt->bindParam(':fullName', $fullName);
-        $stmt->bindParam(':universityID', $universityId);
-
-        if ($stmt->execute()) {
-            //header('Location: login.php');
-            //exit();
-        } else {
-            $error = 'Error: Unable to register';
+        //Check that passwords are the same
+        if ($password != $confirmPassword) {
+            $error = "Passwords do not match!";
         }
 
+        //Check that the user does not already exist
+        if ($error == null) {
+
+
+            //Create the statement.
+            $statement = 'SELECT COUNT(*) FROM Users WHERE Email = :email';
+
+            $stmt = $dbConn->prepare($statement);
+            $stmt->bindParam(':email', $email);
+
+            //Execute the statement
+            $stmt->execute();
+
+            //Get the result
+            $count = $stmt->fetchColumn();
+
+            //If its not zero, it already exists!
+            if ($count != 0) {
+                $error = "A User with this email already exists!";
+            }
+        }
+
+
+        //Bind so we dont have any sql injection issues!
+        if ($error == null) {
+
+
+            //Hash the password
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            //Create the statement.
+            $statement = 'INSERT INTO Users (Email, Password, FullName, UniversityID) VALUES (:email, :password, :fullName, :universityID)';
+
+            $stmt = $dbConn->prepare($statement);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $hashedPassword);
+            $stmt->bindParam(':fullName', $fullName);
+            $stmt->bindParam(':universityID', $universityId);
+
+            //Execute the statement
+            $stmt->execute();
+        }
+
+
+
+
+        //If theres no errors then go back to the index!
+        if ($error == null) {
+            header('Location: index.php');
+        }
     }
 
 ?>
+
+<?php if($error != null) : ?>
+    <div class="alert alert-danger text-center" role="alert">
+        Error: <?php echo $error; ?>
+    </div>
+<?php endif; ?>
 
 <div class="h-100 d-flex align-items-center justify-content-center">
 
