@@ -7,9 +7,7 @@ $user_id = $_SESSION["user_id"];
 $university_id = $_SESSION["user_universityid"];
 
 // Fetch RSOs for the user's university
-$stmt = $dbConn->prepare('SELECT * FROM events WHERE UniversityID = :university_id');
-$stmt->execute(['university_id' => $university_id]);
-$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$events = events_get_all_events($university_id);
 ?>
     <div class="container">
         <div class="row">

@@ -59,28 +59,10 @@ if (isset($_POST['submit'])) {
 <?php
 
 //Get the event
-$statement = 'SELECT * FROM Events WHERE EventID = :eventId';
-
-$stmt = $dbConn->prepare($statement);
-$stmt->bindParam(':eventId', $_GET["id"]);
-
-//Execute the statement
-$stmt->execute();
+$event = events_get_event($_SESSION["user_universityid"], $_GET["id"]);
 
 //Get the result
-$eventQuery = $stmt->fetch();
-
-//Get the rating of the event
-$statement = 'SELECT AVG(Stars) FROM Ratings WHERE EventID = :eventId';
-
-$stmt = $dbConn->prepare($statement);
-$stmt->bindParam(':eventId', $_GET["id"]);
-
-//Execute the statement
-$stmt->execute();
-
-//Get the result
-$eventRating = $stmt->fetchColumn();
+$eventRating = events_get_event_rating($_GET["id"]);
 
 //If its null, just say no ratings
 if ($eventRating == null) {
@@ -104,31 +86,31 @@ if ($eventRating == null) {
 
             <h1>Host Event</h1>
             <div class="mb-3">
-                <h1 class=""><?= $eventQuery["Name"] ?></h1>
+                <h1 class=""><?= $event["Name"] ?></h1>
             </div>
             <div class="mb-3">
-                <h2 class=""><?= $eventQuery["Description"] ?></h2>
+                <h2 class=""><?= $event["Description"] ?></h2>
             </div>
             <div class="mb-3">
-                <h2 class=""><?= $eventQuery["Category"] ?></h2>
+                <h2 class=""><?= $event["Category"] ?></h2>
             </div>
             <div class="mb-3">
-                <h2 class=""><?= $eventQuery["Time"] ?></h2>
+                <h2 class=""><?= $event["Time"] ?></h2>
             </div>
             <div class="mb-3">
-                <h2 class=""><?= $eventQuery["Date"] ?></h2>
+                <h2 class=""><?= $event["Date"] ?></h2>
             </div>
             <div class="mb-3">
-                <h2 class=""><?= $eventQuery["LocationID"] ?></h2>
+                <h2 class=""><?= $event["LocationID"] ?></h2>
             </div>
             <div class="mb-3">
-                <h2 class=""><?= $eventQuery["ContactPhone"] ?></h2>
+                <h2 class=""><?= $event["ContactPhone"] ?></h2>
             </div>
             <div class="mb-3">
-                <h2 class=""><?= $eventQuery["ContactEmail"] ?></h2>
+                <h2 class=""><?= $event["ContactEmail"] ?></h2>
             </div>
             <div class="mb-3">
-                <h2 class=""><?= $eventQuery["RSOID"] ?></h2>
+                <h2 class=""><?= $event["RSOID"] ?></h2>
             </div>
             <div class="mb-3">
                 <h2 class="">Rating: <?= $eventRating ?></h2>

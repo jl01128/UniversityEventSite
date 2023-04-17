@@ -1,25 +1,241 @@
+
+<!-- DATABASE FUNCTIONS! -->
 <?php
 
-$dbConn = null;
+function db_get_connection() {
+    $dbConn = null;
 
-$host = '127.0.0.1';
-$db = 'universitysite';
-$user = 'universitysite';
-$pass = 'universitysite';
-$charset = 'utf8mb4';
+    $host = '127.0.0.1';
+    $db = 'universitysite';
+    $user = 'universitysite';
+    $pass = 'universitysite';
+    $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES => false,
-];
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ];
 
-try {
-    $dbConn = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    try {
+        $dbConn = new PDO($dsn, $user, $pass, $options);
+        return $dbConn;
+
+    } catch (\PDOException $e) {
+        throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    }
 }
+
+function users_get_user_from_email($universityId, $userEmail) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    $stmt = $dbConn->prepare("SELECT * FROM Users WHERE UniversityID = :universityId AND Email = :email");
+    $stmt->bindParam(':universityId', $universityId);
+    $stmt->bindParam(':email', $userEmail);
+    $stmt->execute();
+
+    $user = $stmt->fetch();
+
+
+    return $user;
+}
+
+
+function orgs_check_exists($universityId, $rsoName) {
+
+
+}
+
+function orgs_get_organizations($universityId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    // Fetch RSOs for the user's university
+    $stmt = $dbConn->prepare('SELECT * FROM RSOs WHERE UniversityID = :university_id');
+    $stmt->execute(['university_id' => $universityId]);
+    $rsos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return$rsos;
+}
+
+function orgs_get_organization($universityId, $rsoId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the event
+    $statement = 'SELECT * FROM rsos WHERE RSOID = :rsoId AND UniversityID = :universityId';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':rsoId', $rsoId);
+    $stmt->bindParam(':universityId', $universityId);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    $rso = $stmt->fetch();
+
+    return $rso;
+}
+
+
+function orgs_get_rsoid($universityId, $rsoName) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the event
+    $statement = 'SELECT * FROM rsos WHERE Name = :rsoName AND UniversityID = :universityId';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':rsoName', $rsoName);
+    $stmt->bindParam(':universityId', $universityId);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    $rso = $stmt->fetch();
+
+    return $rso["RSOID"];
+}
+
+
+function orgs_create_rso($universityId, $rsoName, $adminId, $memberEmails) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    // Insert the RSO
+    $stmt = $dbConn->prepare("INSERT INTO RSOs (Name, AdminID, UniversityID) VALUES (:name, :adminID, :universityID)");
+    $stmt->bindParam(':name', $rsoName);
+    $stmt->bindParam(':adminID', $adminId);
+    $stmt->bindParam(':universityID', $universityId);
+    $stmt->execute();
+    $rsoID = $dbConn->lastInsertId();
+
+    // Get UserIDs for member email addresses
+    foreach ($memberEmails as $email) {
+
+        //Get the user
+        $user = users_get_user_from_email($universityId, $email);
+
+        //Add the user to the RSO
+        orgs_add_member($rsoID, $user["UserID"]);
+    }
+}
+
+function orgs_add_member($rsoId, $newMemberId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    // Add members to the RSOMembers table
+    $stmt = $dbConn->prepare("INSERT INTO RSOMembers (UserID, RSOID) VALUES (:userID, :rsoID)");
+
+    $stmt->bindParam(':userID', $newMemberId);
+    $stmt->bindParam(':rsoID', $rsoId);
+    $stmt->execute();
+}
+
+function events_get_all_events($universityId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+
+    $stmt = $dbConn->prepare('SELECT * FROM events WHERE UniversityID = :university_id');
+    $stmt->execute(['university_id' => $universityId]);
+    $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $events;
+}
+
+function events_get_event($universityId, $eventId)
+{
+    //Get connection
+    $dbConn = db_get_connection();
+
+    $statement = 'SELECT * FROM Events WHERE EventID = :eventId AND UniversityID = :universityId';
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':universityId', $universityId);
+    $stmt->bindParam(':eventId', $eventId);
+    $stmt->execute();
+
+    return $stmt->fetch();
+}
+
+function events_get_event_rating($eventId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the rating of the event
+    $statement = 'SELECT AVG(Stars) FROM Ratings WHERE EventID = :eventId';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':eventId', $eventId);
+
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    return $stmt->fetchColumn();
+}
+
+function events_set_event_rating($eventId, $userId, $rating) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    try {
+        // Insert the RSO
+        $stmt = $dbConn->prepare('SELECT COUNT(*) FROM ratings WHERE UserId = :userId AND EventID = :eventId');
+        $stmt->bindParam(':userId', $userId);
+        $stmt->bindParam(':eventId', $eventId);
+
+        //Execute the statement
+        $stmt->execute();
+
+        //Get the result
+        $count = $stmt->fetchColumn();
+
+
+        //If its not zero, it already exists!
+        if ($count == 0) {
+            $stmt = $dbConn->prepare('INSERT INTO ratings (UserID, EventID, Stars) VALUES (:userId, :eventId, :rating)');
+            $stmt->bindParam(':userId', $userId);
+            $stmt->bindParam(':eventId', $eventId);
+            $stmt->bindParam(':rating', $rating);
+
+            //Execute the statement
+            $stmt->execute();
+
+        } else {
+            $stmt = $dbConn->prepare('UPDATE ratings SET Stars = :rating WHERE UserID = :userId AND EventID = :eventId');
+            $stmt->bindParam(':userId', $userId);
+            $stmt->bindParam(':eventId', $eventId);
+            $stmt->bindParam(':rating', $rating);
+
+            //Execute the statement
+            $stmt->execute();
+        }
+
+        $stmt->execute();
+
+    } catch (PDOException $e) {
+        $error = "Error creating RSO: " . $e->getMessage();
+    }
+}
+
+
+
 
 ?>
 
