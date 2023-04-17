@@ -143,6 +143,30 @@ function orgs_add_member($rsoId, $newMemberId) {
     $stmt->execute();
 }
 
+function events_create_event($universityId, $eventName, $category, $description, $time, $date, $latitude, $longitude, $contactPhone, $contactEmail, $eventType, $rsoID) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Create the location
+    $locationId = locations_create_location($eventName, $latitude, $longitude);
+
+    $stmt = $dbConn->prepare("INSERT INTO EVENTS (Name, Category, Description, Time, Date, LocationID, ContactPhone, ContactEmail, EventType, RSOID, UniversityID, APPROVED) VALUES (:eventName, :category, :description, :time, :date, :locationId, :contactPhone, :contactEmail, :eventType, :rsoID, :universityID, false)");
+    $stmt->bindParam(':eventName', $eventName);
+    $stmt->bindParam(':category', $category);
+    $stmt->bindParam(':description', $description);
+    $stmt->bindParam(':time', $time);
+    $stmt->bindParam(':date', $date);
+    $stmt->bindParam(':locationId', $locationId);
+    $stmt->bindParam(':contactPhone', $contactPhone);
+    $stmt->bindParam(':contactEmail', $contactEmail);
+    $stmt->bindParam(':eventType', $eventType);
+    $stmt->bindParam(':rsoID', $rsoID);
+    $stmt->bindParam(':universityID', $universityId);
+
+    $stmt->execute();
+}
+
 function events_get_all_events($universityId) {
 
     //Get connection
@@ -232,6 +256,22 @@ function events_set_event_rating($eventId, $userId, $rating) {
     } catch (PDOException $e) {
         $error = "Error creating RSO: " . $e->getMessage();
     }
+}
+
+function locations_create_location($name, $latitude, $longitude) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    // Add members to the RSOMembers table
+    $stmt = $dbConn->prepare("INSERT INTO locations (Name, Latitude, Longitude) VALUES (:name, :latitude, :longitude)");
+
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':latitude', $latitude);
+    $stmt->bindParam(':longitude', $longitude);
+    $stmt->execute();
+
+    return $dbConn->lastInsertId();
 }
 
 
