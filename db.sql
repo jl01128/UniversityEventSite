@@ -8,6 +8,7 @@ CREATE TABLE Universities (
     Location VARCHAR(255) NOT NULL,
     Description TEXT,
     NumberOfStudents INT,
+	AdminID INT,
     ImageURL VARCHAR(255)
 );
 CREATE TABLE Users (
@@ -15,10 +16,13 @@ CREATE TABLE Users (
     Email VARCHAR(255) NOT NULL UNIQUE,
     Password VARCHAR(255) NOT NULL,
     FullName VARCHAR(255) NOT NULL,
-    UserType ENUM('super_admin', 'admin', 'student') DEFAULT 'student',
     UniversityID INT,
     FOREIGN KEY (UniversityID) REFERENCES Universities(UniversityID)
 );
+
+ALTER TABLE Universities
+ADD FOREIGN KEY (AdminID) REFERENCES Users(UserID);
+
 CREATE TABLE RSOs (
     RSOID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
@@ -81,14 +85,14 @@ CREATE TABLE Ratings (
 INSERT INTO `universities` (`UniversityID`, `Name`, `Location`, `Description`, `NumberOfStudents`, `ImageURL`) VALUES
 (1, 'University of Central Florida', 'Orlando, Florida', 'UCF Description!', 50000, 'https://1000logos.net/wp-content/uploads/2017/11/University-of-Central-Florida-Logo.png');
 
-INSERT INTO `users` (`UserID`, `Email`, `Password`, `FullName`, `UserType`, `UniversityID`) VALUES
-(1, 'John.A@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'John Adams', 'student', 1),
-(2, 'Sarah.B@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Sarah Brown', 'student', 1),
-(3, 'Michael.C@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Michael Clark', 'student', 1),
-(4, 'Emily.D@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Emily Davis', 'student', 1),
-(5, 'Daniel.E@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Daniel Evans', 'student', 1),
-(6, 'Olivia.F@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Olivia Fernandez', 'student', 1),
-(7, 'William.G@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'William Green', 'student', 1),
-(8, 'Sophia.H@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Sophia Hernandez', 'student', 1),
-(9, 'Christopher.I@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Christopher Irwin', 'student', 1),
-(10, 'Ava.J@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Ava Jones', 'student', 1);
+INSERT INTO `users` (`UserID`, `Email`, `Password`, `FullName`, `UniversityID`) VALUES
+(1, 'John.A@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'John Adams', 1),
+(2, 'Sarah.B@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Sarah Brown', 1),
+(3, 'Michael.C@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Michael Clark', 1),
+(4, 'Emily.D@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Emily Davis', 1),
+(5, 'Daniel.E@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Daniel Evans', 1),
+(6, 'Olivia.F@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Olivia Fernandez', 1),
+(7, 'William.G@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'William Green', 1),
+(8, 'Sophia.H@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Sophia Hernandez', 1),
+(9, 'Christopher.I@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Christopher Irwin', 1),
+(10, 'Ava.J@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Ava Jones', 1);
