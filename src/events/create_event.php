@@ -1,6 +1,7 @@
 <?php
 include_once('../core/header.php');
-require_once('../core/db.php');
+include_once('../core/core.php');
+include_once('../auth/login_required.php');
 
 $error = null;
 
@@ -11,39 +12,16 @@ if (isset($_POST['submit'])) {
     $description = ($_POST['description']);
     $time = ($_POST['time']);
     $date = ($_POST['date']);
-    $locationId = ($_POST['locationId']);
+    $latitude = ($_POST['latitude']);
+    $longitude = ($_POST['longitude']);
     $contactPhone = ($_POST['contactPhone']);
     $contactEmail = ($_POST['contactEmail']);
     $eventType = ($_POST['eventType']);
     $rsoID = ($_POST['rsoID']);
-    $universityID = ($_POST['universityID']);
-    $approved = ($_POST['approved']);
-
-    // Get the current user's ID as the admin
-    $adminID = $_SESSION["user_id"];
+    $universityID = ($_SESSION["user_universityid"]);
 
 
-    try {
-        // Insert the RSO
-        $stmt = $dbConn->prepare("INSERT INTO EVENTS (Name, Category, Description, Time, Date, LocationID, ContactPhone, ContactEmail, EventType, RSOID, UniversityID, APPROVED) VALUES (:eventName, :category, :description, :time, :date, :locationId, :contactPhone, :contactEmail, :eventType, :rsoID, :universityID, :approved)");
-        $stmt->bindParam(':eventName', $eventName);
-        $stmt->bindParam(':category', $category);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':time', $time);
-        $stmt->bindParam(':date', $date);
-        $stmt->bindParam(':locationId', $locationId);
-        $stmt->bindParam(':contactPhone', $contactPhone);
-        $stmt->bindParam(':contactEmail', $contactEmail);
-        $stmt->bindParam(':eventType', $eventType);
-        $stmt->bindParam(':rsoID', $rsoID);
-        $stmt->bindParam(':universityID', $universityID);
-        $stmt->bindParam(':approved', $approved);
-  
-        $stmt->execute();
-
-    } catch (PDOException $e) {
-        $error = "Error creating RSO: " . $e->getMessage();
-    }
+    events_create_event($universityID, $eventName, $category, $description, $time, $date, $latitude, $longitude, $contactPhone, $contactEmail, $eventType, $rsoID);
 
 }
 
@@ -92,8 +70,12 @@ if (isset($_POST['submit'])) {
                     </div>
                 </div>
                 <div class="mt-2 d-flex justify-content-center">
-                    <label>LocationId:&nbsp;</label>
-                    <input class="col-2" type="numver" name="locationId" id="locationId" maxlength="50">
+                    <label>Lat:&nbsp;</label>
+                    <input type="num" class="col-2" name="latitude" id="latitude" maxlength="50">
+                </div>
+                <div class="mt-2 d-flex justify-content-center">
+                    <label>Lon:&nbsp;</label>
+                    <input type="num" class="col-2" name="longitude" id="longitude" maxlength="50">
                 </div>
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone</label>
@@ -114,14 +96,6 @@ if (isset($_POST['submit'])) {
                 <div class="mb-3">
                     <label for="rsoID" class="form-label">RSOID</label>
                     <input type="number" class="form-control" id="rsoID" name="rsoID" maxlength="6" required>
-                </div>
-                <div class="mb-3">
-                    <label for="universityID" class="form-label">UniversityID</label>
-                    <input type="number" class="form-control" id="universityID" name="universityID" required>
-                </div>
-                <div class="mb-3">
-                    <label for="approved" class="form-label">Super Admin Approval</label>
-                    <input type="number" class="form-control" id="approved" name="approved" required>
                 </div>
                 <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Create Event
                 </button>

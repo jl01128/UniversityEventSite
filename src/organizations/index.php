@@ -1,4 +1,5 @@
 <?php
+include_once('../auth/login_required.php');
 include_once('../core/header.php');
 
 // Get the user ID and university ID from the session
@@ -6,9 +7,7 @@ $user_id = $_SESSION["user_id"];
 $university_id = $_SESSION["user_universityid"];
 
 // Fetch RSOs for the user's university
-$stmt = $dbConn->prepare('SELECT * FROM RSOs WHERE UniversityID = :university_id');
-$stmt->execute(['university_id' => $university_id]);
-$rsos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$rsos = orgs_get_organizations($university_id);
 ?>
 
     <div class="container">
@@ -25,7 +24,7 @@ $rsos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <p class="card-text">RSO</p>
                             <a href="#" class="btn btn-primary">View RSO</a>
                             <?php if ($is_admin) : ?>
-                                <a href="#" class="btn btn-warning">Edit RSO</a>
+                                <a href="/organizations/edit_rso.php?id=<?=$rso["RSOID"]?>" class="btn btn-warning">Edit RSO</a>
                             <?php endif; ?>
                         </div>
                     </div>

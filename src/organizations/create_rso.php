@@ -1,4 +1,5 @@
 <?php
+include_once('../auth/login_required.php');
 include_once('../core/header.php');
 require_once('../core/db.php');
 
@@ -13,66 +14,30 @@ if (isset($_POST['submit'])) {
     // Get the current user's ID as the admin
     $adminID = $_SESSION["user_id"];
 
-    echo 'admin: ';
-    echo $adminID;
-
     if (empty($rsoName) || empty($universityID) || count($memberEmails) < 4) {
         $error = "All fields are required, and at least 4 members should be added.";
     } else {
-        try {
-            // Insert the RSO
-            $stmt = $dbConn->prepare("INSERT INTO RSOs (Name, AdminID, UniversityID) VALUES (:name, :adminID, :universityID)");
-            $stmt->bindParam(':name', $rsoName);
-            $stmt->bindParam(':adminID', $adminID);
-            $stmt->bindParam(':universityID', $universityID);
-            $stmt->execute();
-            $rsoID = $dbConn->lastInsertId();
-
-            // Get UserIDs for member email addresses
-            $userIDs = [];
-            foreach ($memberEmails as $email) {
-                $stmt = $dbConn->prepare("SELECT UserID FROM Users WHERE Email = :email");
-                $stmt->bindParam(':email', $email);
-                $stmt->execute();
-                $userID = $stmt->fetchColumn();
-                if ($userID) {
-                    $userIDs[] = $userID;
-                }
-            }
-
-            if (count($userIDs) < 4) {
-                $error = "At least 4 valid member email addresses are required.";
-            } else {
-                // Add members to the RSOMembers table
-                $stmt = $dbConn->prepare("INSERT INTO RSOMembers (UserID, RSOID) VALUES (:userID, :rsoID)");
-                foreach ($userIDs as $userID) {
-                    $stmt->bindParam(':userID', $userID);
-                    $stmt->bindParam(':rsoID', $rsoID);
-                    $stmt->execute();
-                }
 
 
-                //Add the user that created the RSO.
-                $stmt->bindParam(':userID', $_SESSION["user_id"]);
-                $stmt->bindParam(':rsoID', $rsoID);
-                $stmt->execute();
+        //Create the RSO
+        orgs_create_rso($universityID, $rsoName, $adminID, $memberEmails);
 
+        //Get the new RSOID
+        $rsoId = orgs_get_rsoid($universityID, $rsoName);
 
-                //header("Location: success.php");
-                exit();
-            }
-        } catch (PDOException $e) {
-            $error = "Error creating RSO: " . $e->getMessage();
-        }
+        //Add admin to the rso
+        orgs_add_member($rsoId, $adminID);
+
+        header("Location: /organizations/edit_rso.php?id=".$rsoId);
     }
 }
 
 ?>
 
 <?php if ($error != null) : ?>
-    <div class="alert alert-danger text-center" role="alert">
-        Error: <?php echo $error; ?>
-    </div>
+<div class="alert alert-danger text-center" role="alert">
+    Error: <?php echo $error; ?>
+</div>
 <?php endif; ?>
 
 <div class="h-100 d-flex align-items-center justify-content-center">
@@ -92,8 +57,11 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="mb-3" id="memberEmailsContainer">
                     <label for="memberEmails[]" class="form-label">Member Email Addresses</label>
-                    <?php for ($i = 0; $i < 4; $i++) : ?>
-                        <input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address">
+                    <?php for ($i = 0;
+                    $i < 4;
+                    $i++) : ?>
+                        <input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]"
+                               name="memberEmails[]" placeholder="Email address">
                     <?php endfor; ?>
                 </div>
                 <button type="button" id="addMoreMembers" class="btn btn-secondary mb-3">Add more members</button>
@@ -102,8 +70,8 @@ if (isset($_POST['submit'])) {
         </div>
 
         <script>
-            $(document).ready(function() {
-                $("#addMoreMembers").click(function() {
+            $(document).ready(function () {
+                $("#addMoreMembers").click(function () {
                     $('<input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address">').appendTo("#memberEmailsContainer");
                 });
             });
@@ -112,5 +80,5 @@ if (isset($_POST['submit'])) {
 </div>
 
 <?php
-include_once('../core/footer.php');
+include_once ('../core/footer.php');
 ?>
