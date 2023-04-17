@@ -28,7 +28,7 @@ if (isset($_POST['submit'])) {
         //Add admin to the rso
         orgs_add_member($rsoId, $adminID);
 
-        //header("Location: success.php");
+        header("Location: /organizations/edit_rso.php?id=".$rsoId);
     }
 }
 
