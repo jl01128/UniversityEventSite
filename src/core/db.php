@@ -152,6 +152,10 @@ function orgs_create_rso($universityId, $rsoName, $adminId, $memberEmails) {
 
 function orgs_update_rso($universityId, $rsoId, $rsoName, $adminId, $memberEmails) {
 
+    //Check if name is taken
+    if (orgs_get_rsoid($universityId, $rsoName))
+        return false;
+
     //Get connection
     $dbConn = db_get_connection();
 
