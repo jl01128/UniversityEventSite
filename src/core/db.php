@@ -274,6 +274,42 @@ function locations_create_location($name, $latitude, $longitude) {
     return $dbConn->lastInsertId();
 }
 
+function comments_add_comment($userId, $eventId, $content) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    $stmt = $dbConn->prepare('INSERT INTO comments (UserID, EventID, Content) VALUES (:userId, :eventId, :content');
+    $stmt->bindParam(':userId', $userId);
+    $stmt->bindParam(':eventId', $eventId);
+    $stmt->bindParam(':content', $content);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    return $stmt->fetch();
+}
+
+function comments_get_comments($eventId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the rating of the event
+    $statement = 'SELECT * FROM comments WHERE EventID = :eventId';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':eventId', $eventId);
+
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    return $stmt->fetch();
+}
+
 
 
 
