@@ -115,6 +115,6 @@ if (isset($_POST['submit'])) {
 </div>
 
 <?php
-include_once('core/footer.php');
+include_once('../core/footer.php');
 ?>
 
