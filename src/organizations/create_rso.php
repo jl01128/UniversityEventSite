@@ -92,7 +92,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="mb-3" id="memberEmailsContainer">
                     <label for="memberEmails[]" class="form-label">Member Email Addresses</label>
-                    <?php for ($i = 0; $i < 5; $i++) : ?>
+                    <?php for ($i = 0; $i < 4; $i++) : ?>
                         <input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address">
                     <?php endfor; ?>
                 </div>
