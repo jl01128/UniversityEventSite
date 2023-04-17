@@ -2,8 +2,9 @@
 include_once('core/header.php');
 ?>
 
-
-
+<?php
+include_once('homepage/homepage.html');
+?>
 
 
 <?php

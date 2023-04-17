@@ -63,3 +63,4 @@ session_start();
     </div>
   </nav>
   <body class="vh-100">
+</html>
