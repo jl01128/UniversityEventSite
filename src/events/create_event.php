@@ -97,7 +97,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone</label>
-                    <input type="number" class="form-control" id="contactPhone" name="contactPhone" required>
+                    <input type="tel" class="form-control" id="contactPhone" name="contactPhone" maxlength="10" required>
                 </div>
                 <div class="mb-3">
                     <label for="rsoName" class="form-label">Email Address</label>
@@ -113,7 +113,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="mb-3">
                     <label for="rsoID" class="form-label">RSOID</label>
-                    <input type="number" class="form-control" id="rsoID" name="rsoID" required>
+                    <input type="number" class="form-control" id="rsoID" name="rsoID" maxlength="6" required>
                 </div>
                 <div class="mb-3">
                     <label for="universityID" class="form-label">UniversityID</label>
