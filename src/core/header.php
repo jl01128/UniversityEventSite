@@ -34,6 +34,9 @@ session_start();
             <a class="nav-link" href="/organizations/index.php">RSOs</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="/organizations/create_rso.php">Create RSO</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="/events/index.php">Events</a>
           </li>
           <li class="nav-item">
