@@ -43,13 +43,33 @@ function users_get_user_from_email($universityId, $userEmail) {
     return $user;
 }
 
+function users_get_user($universityId, $userId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    $stmt = $dbConn->prepare("SELECT * FROM Users WHERE UniversityID = :universityId AND UserID = :userId");
+    $stmt->bindParam(':universityId', $universityId);
+    $stmt->bindParam(':userId', $userId);
+    $stmt->execute();
+
+    $user = $stmt->fetch();
+
+
+    return $user;
+}
+
 
 function orgs_check_exists($universityId, $rsoName) {
 
+    //Get the rso
+    $rso = orgs_get_rsoid($universityId, $rsoName);
+
+    return $rso == null;
 
 }
 
-function orgs_get_organizations($universityId) {
+function orgs_get_all_rsos($universityId) {
 
     //Get connection
     $dbConn = db_get_connection();
@@ -62,7 +82,7 @@ function orgs_get_organizations($universityId) {
     return$rsos;
 }
 
-function orgs_get_organization($universityId, $rsoId) {
+function orgs_get_rso($universityId, $rsoId) {
 
     //Get connection
     $dbConn = db_get_connection();
@@ -130,6 +150,65 @@ function orgs_create_rso($universityId, $rsoName, $adminId, $memberEmails) {
     }
 }
 
+function orgs_update_rso($universityId, $rsoId, $rsoName, $adminId, $memberEmails) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the RSO
+    $rso = orgs_get_rso($universityId, $rsoId);
+
+    //Get the members
+    $rsoCurrentMembers = orgs_get_members($rsoId);
+
+    //Remove all members
+    foreach ($rsoCurrentMembers as $rsoMember) {
+        orgs_remove_member($rsoId, $rsoMember["UserID"]);
+    }
+
+    //Add all the members
+    foreach ($memberEmails as $email) {
+
+        //Get the user
+        $user = users_get_user_from_email($universityId, $email);
+
+        //Add the user to the RSO
+        orgs_add_member($rsoId, $user["UserID"]);
+    }
+
+    //Update admin and name
+    $stmt = $dbConn->prepare('UPDATE rsos SET Name = :rsoName, AdminID = :adminId WHERE UniversityID = :universityId AND RSOID = :rsoId');
+    $stmt->bindParam(':rsoName', $rsoName);
+    $stmt->bindParam(':adminId', $adminId);
+    $stmt->bindParam(':universityId', $universityId);
+    $stmt->bindParam(':rsoId', $rsoId);
+
+    //Execute the statement
+    $stmt->execute();
+
+
+
+}
+
+function orgs_get_members($rsoId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the rating of the event
+    $statement = 'SELECT * FROM rsomembers WHERE RSOID = :rsoId';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':rsoId', $rsoId);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    return $stmt->fetchAll();
+
+}
+
 function orgs_add_member($rsoId, $newMemberId) {
 
     //Get connection
@@ -140,6 +219,19 @@ function orgs_add_member($rsoId, $newMemberId) {
 
     $stmt->bindParam(':userID', $newMemberId);
     $stmt->bindParam(':rsoID', $rsoId);
+    $stmt->execute();
+}
+
+function orgs_remove_member($rsoId, $memberId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    // Add members to the RSOMembers table
+    $stmt = $dbConn->prepare("DELETE FROM RSOMembers WHERE UserID = :userId AND RSOID = :rsoId");
+
+    $stmt->bindParam(':userId', $memberId);
+    $stmt->bindParam(':rsoId', $rsoId);
     $stmt->execute();
 }
 

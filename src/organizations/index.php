@@ -7,7 +7,7 @@ $user_id = $_SESSION["user_id"];
 $university_id = $_SESSION["user_universityid"];
 
 // Fetch RSOs for the user's university
-$rsos = orgs_get_organizations($university_id);
+$rsos = orgs_get_all_rsos($university_id);
 ?>
 
     <div class="container">

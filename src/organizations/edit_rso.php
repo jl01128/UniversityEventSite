@@ -5,51 +5,33 @@ require_once('../core/db.php');
 
 $error = null;
 
+$universityId = $_SESSION["user_universityid"];
+
 // Check if the form is submitted
 if (isset($_POST['submit'])) {
     $rsoId = trim($_POST['rsoId']);
-    $universityID = intval($_POST['universityId']);
+    $rsoName = trim($_POST['rsoName']);
+    $rsoAdminEmail = trim($_POST['rsoAdmin']);
     $memberEmails = array_filter($_POST['memberEmails'], 'strlen');
 
+    //Get the RSO
+    $rso = orgs_get_rso($universityId, $rsoId);
 
-    try {
+    //Get the new rso admins id
+    $rsoAdmin = users_get_user_from_email($universityId, $rsoAdminEmail)["UserID"];
 
-        // Get UserIDs for member email addresses
-        $userIDs = [];
-        foreach ($memberEmails as $email) {
-            $stmt = $dbConn->prepare("SELECT UserID FROM Users WHERE Email = :email");
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
-            $userID = $stmt->fetchColumn();
-            if ($userID) {
-                $userIDs[] = $userID;
-            }
-        }
+    //Update the org
+    orgs_update_rso($universityId, $rsoId, $rsoName, $rsoAdmin,$memberEmails);
 
-        // Add members to the RSOMembers table
-        $stmt = $dbConn->prepare("INSERT INTO RSOMembers (UserID, RSOID) VALUES (:userID, :rsoID)");
-        foreach ($userIDs as $userID) {
-            $stmt->bindParam(':userID', $userID);
-            $stmt->bindParam(':rsoID', $rsoID);
-            $stmt->execute();
-        }
-
-
-        //Add the user that created the RSO.
-        $stmt->bindParam(':userID', $_SESSION["user_id"]);
-        $stmt->bindParam(':rsoID', $rsoID);
-        $stmt->execute();
-
-
-    } catch (PDOException $e) {
-        $error = "Error creating RSO: " . $e->getMessage();
-    }
-
+    //Redirect!
+    header('Location: /organizations/edit_rso.php?id='.$rsoId);
 }
 
 
 //Get the RSO
-$rso = orgs_get_organization($_SESSION["user_universityid"], $_GET["id"]);
+$rso = orgs_get_rso($universityId, $_GET["id"]);
+
+$members = orgs_get_members($_GET["id"]);
 
 
 ?>
@@ -68,9 +50,16 @@ $rso = orgs_get_organization($_SESSION["user_universityid"], $_GET["id"]);
                 <h1>Edit RSO</h1>
                 <form class="text-start" action="/organizations/edit_rso.php" method="post">
 
+                    <input type="hidden" class="form-control" id="rsoId" name="rsoId" aria-describedby="rsoId" value="<?=$_GET["id"]?>" required>
+
                     <div class="mb-3">
                         <label for="rsoName" class="form-label">RSO Name</label>
                         <input type="text" class="form-control" id="rsoName" name="rsoName" value="<?=$rso["Name"]?>"required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rsoName" class="form-label">Admin</label>
+                        <input type="email" class="form-control" id="rsoAdmin" name="rsoAdmin" value="<?=users_get_user($universityId,$rso["AdminID"])["Email"]?>"required>
                     </div>
 
                     <div class="mb-3">
@@ -81,12 +70,12 @@ $rso = orgs_get_organization($_SESSION["user_universityid"], $_GET["id"]);
                     <!-- Member list! -->
                     <div class="mb-3" id="memberEmailsContainer">
                         <label for="memberEmails[]" class="form-label">Members</label>
-                        <?php for ($i = 0; $i < 4; $i++) : ?>
-                            <input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address">
-                        <?php endfor; ?>
+                        <?php foreach ($members as $rsoMember) : ?>
+                            <input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address" value="<?=(users_get_user($universityId, $rsoMember["UserID"])["Email"])?>">
+                        <?php endforeach; ?>
                     </div>
                     <button type="button" id="addMoreMembers" class="btn btn-secondary mb-3">Add more members</button>
-                    <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Create RSO</button>
+                    <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Save Changes</button>
                 </form>
             </div>
 

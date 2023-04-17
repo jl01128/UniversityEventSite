@@ -43,7 +43,7 @@ include_once('../core/core.php');
             <a class="nav-link" href="/events/create_event.php">Create Event</a>
           </li>
         </ul>
-        
+
         <?php endif; ?>
 
         <ul class="navbar-nav ml-auto">
