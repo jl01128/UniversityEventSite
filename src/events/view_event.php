@@ -69,6 +69,23 @@ $stmt->execute();
 //Get the result
 $eventQuery = $stmt->fetch();
 
+//Get the rating of the event
+$statement = 'SELECT AVG(Stars) FROM Ratings WHERE EventID = :eventId';
+
+$stmt = $dbConn->prepare($statement);
+$stmt->bindParam(':eventId', $_GET["id"]);
+
+//Execute the statement
+$stmt->execute();
+
+//Get the result
+$eventRating = $stmt->fetchColumn();
+
+//If its null, just say no ratings
+if ($eventRating == null) {
+    $eventRating = "No Ratings.";
+}
+
 
 ?>
 
@@ -112,6 +129,18 @@ $eventQuery = $stmt->fetch();
             <div class="mb-3">
                 <h2 class=""><?= $eventQuery["RSOID"] ?></h2>
             </div>
+            <div class="mb-3">
+                <h2 class="">Rating: <?= $eventRating ?></h2>
+            </div>
+
+            <form class="text-start" action="/events/update_rating.php" method="post">
+                <input type="hidden" class="form-control" id="event_id" name="event_id" aria-describedby="event_id" value="<?=$_GET["id"]?>" required>
+                <div class="mb-3">
+                    <label for="rating" class="form-label">Rating</label>
+                    <input type="number" class="form-control" id="rating" name="rating" aria-describedby="rating" required>
+                </div>
+                <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Save Rating</button>
+            </form>
         </div>
     </div>
 </div>
