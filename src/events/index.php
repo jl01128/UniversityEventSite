@@ -30,8 +30,8 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <li class="list-group-item"><?=$event["ContactPhone"];?></li>
                         </ul>
                         <div class="card-body">
-                            <a href="#" class="card-link">View Event</a>
-                            <a href="#" class="card-link">Edit event</a>
+                            <a href="/events/view_event?id=<?=$event["EventID"]?>" class="card-link">View Event</a>
+                            <a href="/events/edit_event?id=<?=$event["EventID"]?>" class="card-link">Edit event</a>
                         </div>
                     </div>
                 </div>
