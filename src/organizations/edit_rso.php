@@ -72,8 +72,8 @@ $members = orgs_get_members($_GET["id"]);
                         <label for="memberEmails[]" class="form-label">Members</label>
                         <?php foreach ($members as $rsoMember) : ?>
                             <div class="input-group mb-2 member-email-wrapper">
-                                <input type="email" class="form-control memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address" value="<?=(users_get_user($universityId, $rsoMember["UserID"])["Email"])?>" <?=orgs_check_admin($universityId, $rso["RSOID"], $rsoMember["UserID"]) ? "disabled" : ""?>>
-                                <button type="button" class="btn btn-danger remove-member" <?=orgs_check_admin($universityId, $rso["RSOID"], $rsoMember["UserID"]) ? "disabled" : ""?>>Remove</button>
+                                <input type="email" class="form-control memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address" value="<?=(users_get_user($universityId, $rsoMember["UserID"])["Email"])?>" <?=orgs_check_admin($universityId, $rso["RSOID"], $rsoMember["UserID"]) ? "hidden" : ""?>>
+                                <button type="button" class="btn btn-danger remove-member" <?=orgs_check_admin($universityId, $rso["RSOID"], $rsoMember["UserID"]) ? "hidden" : ""?>>Remove</button>
                             </div>
                         <?php endforeach; ?>
                     </div>

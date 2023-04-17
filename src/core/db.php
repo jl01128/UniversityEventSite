@@ -27,6 +27,40 @@ function db_get_connection() {
     }
 }
 
+function auth_login($email, $password) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Create the statement.
+    $statement = 'SELECT UserID, Password, FullName, UniversityID FROM Users WHERE Email = :email';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':email', $email);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    $queryResult = $stmt->fetch();
+
+    echo $queryResult["Password"];
+
+    //Check validity!
+    if ($queryResult["UserID"] == null || $queryResult["Password"] == null) {
+        return false;
+
+    }else if (!password_verify($password, $queryResult["Password"])) {
+        return false;
+    } else {
+        $_SESSION["user_id"] = $queryResult["UserID"];
+        $_SESSION["user_universityid"] = $queryResult["UniversityID"];
+        $_SESSION["user_fullname"] = $queryResult["FullName"];
+    }
+
+    return true;
+}
+
 function users_get_user_from_email($universityId, $userEmail) {
 
     //Get connection
@@ -152,15 +186,17 @@ function orgs_create_rso($universityId, $rsoName, $adminId, $memberEmails) {
 
 function orgs_update_rso($universityId, $rsoId, $rsoName, $adminId, $memberEmails) {
 
-    //Check if name is taken
-    if (orgs_get_rsoid($universityId, $rsoName))
-        return false;
 
     //Get connection
     $dbConn = db_get_connection();
 
     //Get the RSO
     $rso = orgs_get_rso($universityId, $rsoId);
+
+    //Check if name is taken
+    if ($rso["Name"] != $rsoName)
+        if (orgs_get_rsoid($universityId, $rsoName))
+        return false;
 
     //Get the members
     $rsoCurrentMembers = orgs_get_members($rsoId);
@@ -240,8 +276,9 @@ function orgs_check_membership($universityId, $rsoId, $userId) {
     //Get the result
     $count = $stmt->fetchColumn();
 
+
     //Get the result
-    return count > 0;
+    return $count > 0;
 }
 
 function orgs_add_member($rsoId, $newMemberId) {
