@@ -48,7 +48,7 @@ if (isset($_POST['submit'])) {
                     <label for="rsoName" class="form-label">Category</label>
                     <input type="text" class="form-control" id="category" name="category" required>
                 </div>
-                
+
                 <div class="form-group mb-2">
                     <label for="inputEventDescription" required="required">Description</label>
                     <input style="height:180px; padding-bottom:150px" type="text" name="description"
@@ -70,16 +70,16 @@ if (isset($_POST['submit'])) {
                     </div>
                 </div>
                 <div class="mt-2 d-flex justify-content-center">
-                    <label>Lat:&nbsp;</label>
-                    <input type="num" class="col-2" name="latitude" id="latitude" maxlength="50">
+                    <div id="map" style="width: 100%; height: 300px;"></div>
                 </div>
-                <div class="mt-2 d-flex justify-content-center">
-                    <label>Lon:&nbsp;</label>
-                    <input type="num" class="col-2" name="longitude" id="longitude" maxlength="50">
-                </div>
+
+                <input type="num" class="col-2" name="latitude" id="latitude" maxlength="50" hidden required>
+                <input type="num" class="col-2" name="longitude" id="longitude" maxlength="50" hidden required>
+
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone</label>
-                    <input type="tel" class="form-control" id="contactPhone" name="contactPhone" maxlength="10" required>
+                    <input type="tel" class="form-control" id="contactPhone" name="contactPhone" maxlength="10"
+                           required>
                 </div>
                 <div class="mb-3">
                     <label for="rsoName" class="form-label">Email Address</label>
@@ -108,6 +108,39 @@ if (isset($_POST['submit'])) {
                     $('<input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address">').appendTo("#memberEmailsContainer");
                 });
             });
+        </script>
+        <script>
+            function initMap() {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 0, lng: 0},
+                    zoom: 3
+                });
+
+                // Create a marker object
+                var marker = new google.maps.Marker({
+                    map: map,
+                    draggable: true
+                });
+
+                // Hide the marker initially
+                marker.setVisible(false);
+
+                // Add click event listener to the map
+                map.addListener('click', function (event) {
+                    document.getElementById('latitude').value = event.latLng.lat();
+                    document.getElementById('longitude').value = event.latLng.lng();
+
+                    // Update the marker position and show it
+                    marker.setPosition(event.latLng);
+                    marker.setVisible(true);
+                });
+
+                // Update latitude and longitude fields when the marker is dragged
+                marker.addListener('dragend', function (event) {
+                    document.getElementById('latitude').value = event.latLng.lat();
+                    document.getElementById('longitude').value = event.latLng.lng();
+                });
+            }
         </script>
     </div>
 </div>

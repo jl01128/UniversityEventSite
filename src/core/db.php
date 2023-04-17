@@ -443,6 +443,26 @@ function locations_create_location($name, $latitude, $longitude) {
     return $dbConn->lastInsertId();
 }
 
+function location_get_location($locationid) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the rating of the event
+    $statement = 'SELECT * FROM locations WHERE LocationID = :locationid';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':locationid', $locationid);
+
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    return $stmt->fetch();
+}
+
+
 function comments_add_comment($userId, $eventId, $content) {
 
     //Get connection

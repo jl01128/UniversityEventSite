@@ -21,7 +21,9 @@ $events = events_get_all_events($university_id);
                     <?php
                     if ($event["EventType"] != 'rso' || orgs_check_membership($university_id, $event["RSOID"], $user_id)) : ?>
                         <div class="card" style="width: 18rem;">
-                            <img src="..." class="card-img-top" alt="...">
+                            <div class="mt-2 d-flex justify-content-center">
+                                <div id="map<?= $event['EventID'] ?>" style="width: 100%; height: 300px;"></div>
+                            </div>
                             <div class="card-body">
                                 <h5 class="card-title"><?= $event["Name"]; ?></h5>
                                 <p class="card-text"><?= $event["Description"]; ?></p>
@@ -47,6 +49,34 @@ $events = events_get_all_events($university_id);
             <?php } ?>
         </div>
     </div>
+    <script>
+        // Initialize the maps
+        function initMap() {
+            <?php foreach ($events as $event) { ?>
+            <?php
+            if ($event["EventType"] == 'rso' && !orgs_check_membership($university_id, $event["RSOID"], $user_id)) {
+                continue;
+            }
+            $location = location_get_location($event["LocationID"]);
+            ?>
+            // Create a map for each event
+            var map<?= $event['EventID'] ?> = new google.maps.Map(document.getElementById('map<?= $event['EventID'] ?>'), {
+                center: {lat: <?= $location['Latitude'] ?>, lng: <?= $location['Longitude'] ?>},
+                zoom: 15
+            });
+
+            // Add a marker for each event
+            var marker<?= $event['EventID'] ?> = new google.maps.Marker({
+                position: {lat: <?= $location['Latitude'] ?>, lng: <?= $location['Longitude'] ?>},
+                map: map<?= $event['EventID'] ?>
+            });
+            <?php } ?>
+        }
+
+        //Init the maps
+        initMap();
+    </script>
+
 
 <?php
 include_once('../core/footer.php');
