@@ -315,6 +315,9 @@ function events_create_event($universityId, $eventName, $category, $description,
     //Create the location
     $locationId = locations_create_location($eventName, $latitude, $longitude);
 
+    if ($eventType != 'rso')
+        $rsoID = null;
+
     $stmt = $dbConn->prepare("INSERT INTO EVENTS (Name, Category, Description, Time, Date, LocationID, ContactPhone, ContactEmail, EventType, RSOID, UniversityID, APPROVED) VALUES (:eventName, :category, :description, :time, :date, :locationId, :contactPhone, :contactEmail, :eventType, :rsoID, :universityID, false)");
     $stmt->bindParam(':eventName', $eventName);
     $stmt->bindParam(':category', $category);
@@ -327,6 +330,8 @@ function events_create_event($universityId, $eventName, $category, $description,
     $stmt->bindParam(':eventType', $eventType);
     $stmt->bindParam(':rsoID', $rsoID);
     $stmt->bindParam(':universityID', $universityId);
+
+
 
     $stmt->execute();
 }

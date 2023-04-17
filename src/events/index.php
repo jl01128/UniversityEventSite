@@ -12,12 +12,14 @@ $events = events_get_all_events($university_id);
     <div class="container">
         <div class="row">
             <?php foreach ($events as $event) { ?>
-
-                <?php if ($event["EventType"] == 'rso' && !orgs_check_membership($university_id, $event["RSOID"], $user_id)) {
+                <?php
+                if ($event["EventType"] == 'rso' && !orgs_check_membership($university_id, $event["RSOID"], $user_id)) {
                     continue;
-                } ?>
-                <div class="col"> <!-- Move the opening 'col' div tag here -->
-                    <?php if (orgs_check_membership($university_id, $event["RSOID"], $user_id)) : ?>
+                }
+                ?>
+                <div class="col">
+                    <?php
+                    if ($event["EventType"] != 'rso' || orgs_check_membership($university_id, $event["RSOID"], $user_id)) : ?>
                         <div class="card" style="width: 18rem;">
                             <img src="..." class="card-img-top" alt="...">
                             <div class="card-body">
@@ -41,7 +43,7 @@ $events = events_get_all_events($university_id);
                             </div>
                         </div>
                     <?php endif; ?>
-                </div> <!-- Move the closing 'col' div tag here -->
+                </div>
             <?php } ?>
         </div>
     </div>

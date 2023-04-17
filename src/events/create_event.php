@@ -95,7 +95,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="mb-3">
                     <label for="rsoID" class="form-label">RSOID</label>
-                    <input type="number" class="form-control" id="rsoID" name="rsoID" maxlength="6" required>
+                    <input type="number" class="form-control" id="rsoID" name="rsoID" maxlength="6">
                 </div>
                 <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Create Event
                 </button>
