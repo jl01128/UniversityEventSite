@@ -1,5 +1,5 @@
 <?php
-include_once('core/header.php');
+include_once('../core/header.php');
 ?>
 
 
@@ -10,7 +10,7 @@ header('Location: index.php');
 
 
 <?php
-include_once('core/footer.php');
+include_once('../core/footer.php');
 ?>
 
 
