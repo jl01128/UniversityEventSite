@@ -22,6 +22,10 @@ include_once('../core/core.php');
       </button>
 
       <div class="collapse navbar-collapse" id="navbar-header">
+
+        <!-- Only if logged in! -->
+        <?php if(isLoggedIn()) : ?>
+
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="/">Home</a>
@@ -38,13 +42,12 @@ include_once('../core/core.php');
           <li class="nav-item">
             <a class="nav-link" href="/events/create_event.php">Create Event</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
-          </li>
         </ul>
+        
+        <?php endif; ?>
 
         <ul class="navbar-nav ml-auto">
-        <?php if(isset($_SESSION["user_id"])) : ?>
+        <?php if(isLoggedIn()) : ?>
             <p class ="fw-normal bg-light"> Hello, <?php echo $_SESSION["user_fullname"]; ?></p>
             <li class="nav-item">
               <a class="nav-link" href="/auth/logout.php">Logout</a>
