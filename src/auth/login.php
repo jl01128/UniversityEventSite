@@ -20,7 +20,7 @@ $error = null;
         if ($error == null) {
 
             //Create the statement.
-            $statement = 'SELECT UserID, Password, FullName FROM Users WHERE Email = :email';
+            $statement = 'SELECT UserID, Password, FullName, UniversityID FROM Users WHERE Email = :email';
 
             $stmt = $dbConn->prepare($statement);
             $stmt->bindParam(':email', $email);
@@ -41,6 +41,7 @@ $error = null;
                 $error = "Incorrect username/password.";
             } else {
                 $_SESSION["user_id"] = $queryResult["UserID"];
+                $_SESSION["user_universityid"] = $queryResult["UniversityID"];
                 $_SESSION["user_fullname"] = $queryResult["FullName"];
             }
 
@@ -49,7 +50,7 @@ $error = null;
 
         //If theres no errors then go back to the index!
         if ($error == null) {
-            header('Location: index.php');
+            header('Location: /index.php');
         }
     }
 

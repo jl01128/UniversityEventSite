@@ -96,7 +96,7 @@ include_once('../core/db.php');
         if ($error == null) {
 
             //Create the statement.
-            $statement = 'SELECT UserID FROM Users WHERE Email = :email';
+            $statement = 'SELECT UserID, Password, FullName, UniversityID FROM Users WHERE Email = :email';
 
             $stmt = $dbConn->prepare($statement);
             $stmt->bindParam(':email', $email);
@@ -105,15 +105,17 @@ include_once('../core/db.php');
             $stmt->execute();
 
             //Get the result
-            $userId = $stmt->fetchColumn();
+            $queryResult = $stmt->fetch();
 
-            $_SESSION["user_id"] = $userId;
+            $_SESSION["user_id"] = $queryResult["UserID"];
+            $_SESSION["user_universityid"] = $queryResult["UniversityID"];
+            $_SESSION["user_fullname"] = $queryResult["FullName"];
         }
 
 
         //If theres no errors then go back to the index!
         if ($error == null) {
-            header('Location: index.php');
+            header('Location: /index.php');
         }
     }
 

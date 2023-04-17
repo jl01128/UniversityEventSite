@@ -40,7 +40,6 @@ if (isset($_POST['submit'])) {
                 }
             }
 
-            // Check if at least 4 valid members were found
             if (count($userIDs) < 4) {
                 $error = "At least 4 valid member email addresses are required.";
             } else {
