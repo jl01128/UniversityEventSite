@@ -279,7 +279,7 @@ function comments_add_comment($userId, $eventId, $content) {
     //Get connection
     $dbConn = db_get_connection();
 
-    $stmt = $dbConn->prepare('INSERT INTO comments (UserID, EventID, Content) VALUES (:userId, :eventId, :content');
+    $stmt = $dbConn->prepare('INSERT INTO comments (UserID, EventID, Content) VALUES (:userId, :eventId, :content)');
     $stmt->bindParam(':userId', $userId);
     $stmt->bindParam(':eventId', $eventId);
     $stmt->bindParam(':content', $content);
@@ -307,7 +307,7 @@ function comments_get_comments($eventId) {
     $stmt->execute();
 
     //Get the result
-    return $stmt->fetch();
+    return $stmt->fetchAll();
 }
 
 

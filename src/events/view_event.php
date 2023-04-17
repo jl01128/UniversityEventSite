@@ -69,27 +69,8 @@ if ($eventRating == null) {
     $eventRating = "No Ratings.";
 }
 
-
-//Get the comments of the event
-//$statement = 'SELECT Content FROM Comments WHERE EventID = :eventId';
-
-//$stmt = $dbConn->prepare($statement);
-$stmt->bindParam(':eventId', $_GET["id"]);
-
-//Execute the statement
-$stmt->execute();
-
-//Get the result
-$eventComments = $stmt->fetchColumn();
-
-$stmt = $dbConn->prepare('SELECT Content FROM Comments WHERE EventID = :eventId');
-$stmt->execute(['event_id' => $university_id]);
-$eventComments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-//If its null, just say no ratings
-if ($eventComments == null) {
-    $eventComments = "No Comments";
-}
+//Get the comments
+$comments = comments_get_comments($_GET["id"]);
 
 ?>
 
@@ -142,11 +123,11 @@ if ($eventComments == null) {
        
 
             <div class="mb-3">
-                <?php foreach ($eventComments as $eventComment) : ?>
+                <?php foreach ($comments as $eventComment) : ?>
                     <div class="col">
                         <div class="card" style="width: 18rem;">  
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><?=$event["Content"];?></li>
+                                <li class="list-group-item"><?=$eventComment["Content"];?></li>
                             </ul>
                         </div>
                     </div>
