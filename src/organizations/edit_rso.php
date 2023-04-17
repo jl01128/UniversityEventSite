@@ -77,7 +77,7 @@ $members = orgs_get_members($_GET["id"]);
                             </div>
                         <?php endforeach; ?>
                     </div>
-                    <button type="button" id="addMoreMembers" class="btn btn-secondary mb-3">Add more members</button>
+                    <button type="button" id="addMoreMembers" class="btn btn-secondary mb-7">Add more members</button>
                     <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Save Changes</button>
                 </form>
             </div>
