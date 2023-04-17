@@ -213,6 +213,37 @@ function orgs_get_members($rsoId) {
 
 }
 
+function orgs_check_admin($universityId, $rsoId, $userId) {
+
+    //Get the RSO
+    $rso = orgs_get_rso($universityId, $rsoId);
+
+    //Return the status
+    return $rso["AdminID"] == $userId;
+}
+
+function orgs_check_membership($universityId, $rsoId, $userId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the rating of the event
+    $statement = 'SELECT COUNT(*) FROM rsomembers WHERE RSOID = :rsoId AND UserID = :userId';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':rsoId', $rsoId);
+    $stmt->bindParam(':userId', $userId);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    $count = $stmt->fetchColumn();
+
+    //Get the result
+    return count > 0;
+}
+
 function orgs_add_member($rsoId, $newMemberId) {
 
     //Get connection

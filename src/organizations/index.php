@@ -14,8 +14,10 @@ $rsos = orgs_get_all_rsos($university_id);
         <div class="row">
             <?php foreach ($rsos as $rso) : ?>
                 <?php
+
                 // Check if the current user is an admin of the RSO
                 $is_admin = $user_id == $rso['AdminID'];
+
                 ?>
                 <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
                     <div class="card">

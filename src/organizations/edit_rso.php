@@ -71,7 +71,10 @@ $members = orgs_get_members($_GET["id"]);
                     <div class="mb-3" id="memberEmailsContainer">
                         <label for="memberEmails[]" class="form-label">Members</label>
                         <?php foreach ($members as $rsoMember) : ?>
-                            <input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address" value="<?=(users_get_user($universityId, $rsoMember["UserID"])["Email"])?>">
+                            <div class="input-group mb-2 member-email-wrapper">
+                                <input type="email" class="form-control memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address" value="<?=(users_get_user($universityId, $rsoMember["UserID"])["Email"])?>" <?=orgs_check_admin($universityId, $rso["RSOID"], $rsoMember["UserID"]) ? "disabled" : ""?>>
+                                <button type="button" class="btn btn-danger remove-member" <?=orgs_check_admin($universityId, $rso["RSOID"], $rsoMember["UserID"]) ? "disabled" : ""?>>Remove</button>
+                            </div>
                         <?php endforeach; ?>
                     </div>
                     <button type="button" id="addMoreMembers" class="btn btn-secondary mb-3">Add more members</button>
@@ -82,7 +85,11 @@ $members = orgs_get_members($_GET["id"]);
             <script>
                 $(document).ready(function() {
                     $("#addMoreMembers").click(function() {
-                        $('<input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address">').appendTo("#memberEmailsContainer");
+                        $('<div class="input-group mb-2 member-email-wrapper"><input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address"><button type="button" class="btn btn-danger remove-member">Remove</button></div>').appendTo("#memberEmailsContainer");
+                    });
+
+                    $(document).on('click', '.remove-member', function() {
+                        $(this).closest('.member-email-wrapper').remove();
                     });
                 });
             </script>
