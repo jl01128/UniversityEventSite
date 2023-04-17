@@ -74,7 +74,7 @@ $members = orgs_get_members($_GET["id"]);
                             <input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address" value="<?=(users_get_user($universityId, $rsoMember["UserID"])["Email"])?>">
                         <?php endforeach; ?>
                     </div>
-                    <button type="button" id="addMoreMembers" class="btn btn-secondary mb-3">Add more members</button>
+                    <button type="button" id="addMoreMembers" class="btn btn-secondary mb-7">Add more members</button>
                     <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Save Changes</button>
                 </form>
             </div>
