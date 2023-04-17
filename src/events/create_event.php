@@ -19,9 +19,6 @@ if (isset($_POST['submit'])) {
     // Get the current user's ID as the admin
     $adminID = $_SESSION["user_id"];
 
-    echo 'admin: ';
-    echo $adminID;
-
 
     try {
         // Insert the RSO
@@ -80,7 +77,7 @@ if (isset($_POST['submit'])) {
 
                 <div class="form-group mb-2">
                     <label class="ml-3 form-control-placeholder mr-3" id="date" for="start">Date:&nbsp;</label>
-                    <input type="date" id="date" name ="date" class="form-control text-left mr-2">
+                    <input type="date" id="date" name="date" class="form-control text-left mr-2">
                 </div>
 
                 <div class="container px-1 px-sm-5 mx-auto mt-2">
