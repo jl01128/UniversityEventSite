@@ -1,7 +1,7 @@
 <?php
 
 //Include the DB
-include 'core/db.php';
+include 'db.php';
 
 $error = null;
 
@@ -42,14 +42,14 @@ session_start();
         <?php if(isset($_SESSION["user_id"])) : ?>
             <p class ="fw-normal bg-light"> Hello, <?php echo $_SESSION["user_fullname"]; ?></p>
             <li class="nav-item">
-              <a class="nav-link" href="logout.php">Logout</a>
+              <a class="nav-link" href="/auth/logout.php">Logout</a>
             </li>
         <?php else: ?>
           <li class="nav-item">
-            <a class="nav-link" href="login.php">Login</a>
+            <a class="nav-link" href="/auth/login.php">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="register.php">Register</a>
+            <a class="nav-link" href="/auth/register.php">Register</a>
           </li>
           <?php endif; ?>
         </ul>

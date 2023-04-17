@@ -1,5 +1,5 @@
 <?php
-include_once('core/header.php');
+include_once('../core/header.php');
 
 $error = null;
 ?>
