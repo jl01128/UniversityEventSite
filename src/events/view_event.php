@@ -87,7 +87,30 @@ if ($eventRating == null) {
 }
 
 
+//Get the comments of the event
+//$statement = 'SELECT Content FROM Comments WHERE EventID = :eventId';
+
+//$stmt = $dbConn->prepare($statement);
+$stmt->bindParam(':eventId', $_GET["id"]);
+
+//Execute the statement
+$stmt->execute();
+
+//Get the result
+$eventComments = $stmt->fetchColumn();
+
+$stmt = $dbConn->prepare('SELECT Content FROM Comments WHERE EventID = :eventId');
+$stmt->execute(['event_id' => $university_id]);
+$eventComments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+//If its null, just say no ratings
+if ($eventComments == null) {
+    $eventComments = "No Comments";
+}
+
 ?>
+
+
 
 <?php if ($error != null) : ?>
     <div class="alert alert-danger text-center" role="alert">
@@ -133,6 +156,20 @@ if ($eventRating == null) {
                 <h2 class="">Rating: <?= $eventRating ?></h2>
             </div>
 
+       
+
+            <div class="mb-3">
+                <?php foreach ($eventComments as $eventComment) : ?>
+                    <div class="col">
+                        <div class="card" style="width: 18rem;">  
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><?=$event["Content"];?></li>
+                            </ul>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
             <form class="text-start" action="/events/update_rating.php" method="post">
                 <input type="hidden" class="form-control" id="event_id" name="event_id" aria-describedby="event_id" value="<?=$_GET["id"]?>" required>
                 <div class="mb-3">
@@ -140,6 +177,17 @@ if ($eventRating == null) {
                     <input type="number" class="form-control" id="rating" name="rating" aria-describedby="rating" required>
                 </div>
                 <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Save Rating</button>
+            </form>
+
+
+
+            <form class="text-start" action="/events/add_comments.php" method="post">
+                <input type="hidden" class="form-control" id="event_id" name="event_id" aria-describedby="event_id" value="<?=$_GET["id"]?>" required>
+                <div class="mb-3">
+                    <label for="comments" class="form-label">Comments</label>
+                    <input type="text" class="form-control" id="comment" name="comment" aria-describedby="event_id" required>
+                </div>
+                <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Add a Comment</button>
             </form>
         </div>
     </div>
