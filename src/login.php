@@ -20,7 +20,7 @@ $error = null;
         if ($error == null) {
 
             //Create the statement.
-            $statement = 'SELECT UserID, Password FROM Users WHERE Email = :email';
+            $statement = 'SELECT UserID, Password, FullName FROM Users WHERE Email = :email';
 
             $stmt = $dbConn->prepare($statement);
             $stmt->bindParam(':email', $email);
@@ -41,6 +41,7 @@ $error = null;
                 $error = "Incorrect username/password.";
             } else {
                 $_SESSION["user_id"] = $queryResult["UserID"];
+                $_SESSION["user_fullname"] = $queryResult["FullName"];
             }
 
         }

@@ -40,6 +40,7 @@ session_start();
 
         <ul class="navbar-nav ml-auto">
         <?php if(isset($_SESSION["user_id"])) : ?>
+            <p class ="fw-normal bg-light"> Hello, <?php echo $_SESSION["user_fullname"]; ?></p>
             <li class="nav-item">
               <a class="nav-link" href="logout.php">Logout</a>
             </li>
