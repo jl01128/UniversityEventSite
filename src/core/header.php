@@ -41,6 +41,9 @@ session_start();
             <a class="nav-link" href="/events/index.php">Events</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="/events/create_event.php">Create Event</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link disabled">Disabled</a>
           </li>
         </ul>
