@@ -1,4 +1,5 @@
 <?php
+include_once('../auth/login_required.php');
 include_once('../core/header.php');
 
 $error = null;

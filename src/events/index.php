@@ -1,4 +1,5 @@
 <?php
+include_once('../auth/login_required.php');
 include_once('../core/header.php');
 
 // Get the user ID and university ID from the session

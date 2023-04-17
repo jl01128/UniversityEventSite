@@ -1,4 +1,5 @@
 <?php
+include_once('../auth/login_required.php');
 include_once('../core/header.php');
 require_once('../core/db.php');
 

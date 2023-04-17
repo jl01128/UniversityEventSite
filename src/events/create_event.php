@@ -1,6 +1,7 @@
 <?php
 include_once('../core/header.php');
-require_once('../core/db.php');
+include_once('../core/core.php');
+include_once('../auth/login_required.php');
 
 $error = null;
 
