@@ -16,10 +16,13 @@ $events = events_get_all_events($university_id);
                 if ($event["EventType"] == 'rso' && !orgs_check_membership($university_id, $event["RSOID"], $user_id)) {
                     continue;
                 }
+                if (($event["EventType"] === 'private' && $event["UniversityID"] !== $university_id) || ($event["EventType"] !== 'rso' && !$event["Approved"])) {
+                    continue;
+                }
                 ?>
                 <div class="col">
                     <?php
-                    if ($event["EventType"] != 'rso' || orgs_check_membership($university_id, $event["RSOID"], $user_id)) : ?>
+                    if ($event["EventType"] == 'rso' || orgs_check_membership($university_id, $event["RSOID"], $user_id) || $event["EventType"] === 'public' || $event["EventType"] === 'private') : ?>
                         <div class="card" style="width: 18rem;">
                             <div class="mt-2 d-flex justify-content-center">
                                 <div id="map<?= $event['EventID'] ?>" style="width: 100%; height: 300px;"></div>
