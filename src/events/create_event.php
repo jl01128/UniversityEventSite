@@ -107,6 +107,7 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
         geocoder.geocode({location: latlng})
             .then((response) => {
                 document.getElementById('address').value = response.results[0].formatted_address;
+                document.getElementById('address-fake').value = response.results[0].formatted_address;
             })
             .catch((e) => window.alert("Geocoder failed due to: " + e));
     }
@@ -157,9 +158,10 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
                 <input type="num" class="col-2" name="latitude" id="latitude" maxlength="50" hidden required>
                 <input type="num" class="col-2" name="longitude" id="longitude" maxlength="50" hidden required>
 
+                <input type="text" class="form-control" id="address" name="address" required hidden>
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address" name="address" required>
+                    <input type="text" class="form-control" id="address-fake" disabled>
                 </div>
 
                 <div class="mb-3">
