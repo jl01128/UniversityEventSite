@@ -33,9 +33,6 @@ include_once('../core/core.php');
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/organizations/index.php">RSOs</a>
                     </li>
                     <li class="nav-item">

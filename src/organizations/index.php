@@ -6,10 +6,17 @@ include_once('../core/header.php');
 $user_id = $_SESSION["user_id"];
 $university_id = $_SESSION["user_universityid"];
 
+$university = university_get_university($university_id);
+
 // Fetch RSOs for the user's university
 $rsos = orgs_get_all_rsos($university_id);
 ?>
 
+
+    <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+        <h1 class="display-4 fw-normal"><?= $university["Name"]; ?> Organizations</h1>
+        <p class="fs-5 text-muted"><?= $university["Description"]; ?></p>
+    </div>
     <div class="container">
         <div class="row">
             <?php foreach ($rsos as $rso) : ?>
@@ -18,20 +25,50 @@ $rsos = orgs_get_all_rsos($university_id);
                 // Check if the current user is an admin of the RSO
                 $is_admin = $user_id == $rso['AdminID'];
 
+                //Get the image url
+                $imageUrl = $rso["ImageURL"];
+                if ($imageUrl == null)
+                    $imageUrl = $university["ImageURL"];
+
+
+                //Get the member count of the rso
+                $rsoMemberCount = count(orgs_get_members($rso["RSOID"]));
+
+                //Get the RSO Admin email
+                $rsoAdminEmail = users_get_user($university_id, $rso["AdminID"])["Email"];
+
+
                 ?>
-                <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-                    <div class="card">
+
+                <div class="col-md-4 event-card">
+                    <div class="card h-100">
+                        <img src="<?= $imageUrl ?>" class="card-img-top align-content-center" alt="">
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($rso['Name']) ?></h5>
-                            <p class="card-text">RSO</p>
-                            <a href="#" class="btn btn-primary">View RSO</a>
-                            <?php if ($is_admin) : ?>
-                                <a href="/organizations/edit_rso.php?id=<?=$rso["RSOID"]?>" class="btn btn-warning">Edit RSO</a>
-                            <?php endif; ?>
+                            <h5 class="card-title"><?= $rso['Name'] ?></h5>
+                            <p class="card-text"><?= $rso['Description'] ?></p>
                         </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Admin:</strong>
+                                <a href="mailto:<?= $rsoAdminEmail; ?>"><?= $rsoAdminEmail; ?></a>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Members: </strong> <?= $rsoMemberCount ?>
+                            </li>
+                            <?php if ($is_admin) : ?>
+                                <li class="list-group-item">
+                                    <a href="/organizations/edit_rso.php?id=<?= $rso["RSOID"] ?>"
+                                       class="btn btn-primary w-100 mb-2">Manage
+                                        RSO</a>
+
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+
                     </div>
                 </div>
             <?php endforeach; ?>
+
         </div>
     </div>
 

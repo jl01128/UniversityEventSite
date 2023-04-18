@@ -26,9 +26,10 @@ ADD FOREIGN KEY (AdminID) REFERENCES Users(UserID);
 CREATE TABLE RSOs (
     RSOID INT AUTO_INCREMENT PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
+    Description VARCHAR(512) NOT NULL,
     AdminID INT,
     UniversityID INT,
-    LogoURL VARCHAR(512),
+    ImageURL VARCHAR(512),
     FOREIGN KEY (AdminID) REFERENCES Users(UserID),
     FOREIGN KEY (UniversityID) REFERENCES Universities(UniversityID)
 );
