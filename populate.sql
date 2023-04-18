@@ -31,6 +31,7 @@ CREATE TABLE RSOs (
     AdminID INT,
     UniversityID INT,
     ImageURL VARCHAR(512),
+    Active BOOLEAN DEFAULT true,
     FOREIGN KEY (AdminID) REFERENCES Users(UserID),
     FOREIGN KEY (UniversityID) REFERENCES Universities(UniversityID)
 );
@@ -90,11 +91,40 @@ ADD CONSTRAINT check_stars_range CHECK (Stars BETWEEN 1 AND 5);
 ALTER TABLE Universities
 ADD CONSTRAINT unique_admin UNIQUE (AdminID);
 
+DELIMITER $$
+CREATE TRIGGER RsoActivityStatusAdd
+    AFTER INSERT ON RSOMEMBERS
+    FOR EACH ROW BEGIN
+    IF ((SELECT COUNT(*) FROM RSOMEMBERS M WHERE M.RSOID = NEW.RSOID) > 4)
+        THEN
+    UPDATE RSOs
+    SET Active = true
+    WHERE RSOID = NEW.RSOID;
+END IF;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER RsoActivityStatusRemove
+    AFTER DELETE ON RSOMEMBERS
+    FOR EACH ROW BEGIN
+    IF ((SELECT COUNT(*) FROM RSOMEMBERS M WHERE M.RSOID = OLD.RSOID) < 5)
+        THEN
+    UPDATE RSOs
+    SET Active = false
+    WHERE RSOID = OLD.RSOID;
+END IF;
+END $$
+DELIMITER ;
+
+-- Reset the delimiter back to ;
+DELIMITER ;
+
 -- Universities
-INSERT INTO `Universities` (`UniversityID`, `Name`, `Location`, `Description`, `NumberOfStudents`, `AdminID`, `ImageURL`) VALUES
-(1, 'University of Central Florida', 'Orlando, Florida', 'UCF is an emerging preeminent research university in Florida & one of the best colleges for quality, access, impact & value.', 69000, null, 'https://1000logos.net/wp-content/uploads/2017/11/University-of-Central-Florida-Logo.png'),
-(2, 'Florida State University', 'Tallahassee, Florida', 'Florida State University is a public research university with an acceptance rate of 36%.', 42000, null, 'https://1000logos.net/wp-content/uploads/2017/11/Florida-State-University.png'),
-(3, 'University of Florida', 'Gainesville, Florida', 'The University of Florida is a top public research university in the suburban center of vibrant Gainesville, Florida.', 52000, null, 'https://1000logos.net/wp-content/uploads/2017/11/University-of-Florida-Logo.png');
+INSERT INTO `Universities` (`UniversityID`, `Name`, `Location`, `Description`, `NumberOfStudents`, `ImageURL`) VALUES
+(1, 'University of Central Florida', 'Orlando, Florida', 'UCF is an emerging preeminent research university in Florida & one of the best colleges for quality, access, impact & value.', 69000, 'https://1000logos.net/wp-content/uploads/2017/11/University-of-Central-Florida-Logo.png'),
+(2, 'Florida State University', 'Tallahassee, Florida', 'Florida State University is a public research university with an acceptance rate of 36%.', 42000, 'https://1000logos.net/wp-content/uploads/2017/11/Florida-State-University.png'),
+(3, 'University of Florida', 'Gainesville, Florida', 'The University of Florida is a top public research university in the suburban center of vibrant Gainesville, Florida.', 52000, 'https://1000logos.net/wp-content/uploads/2017/11/University-of-Florida-Logo.png');
 
 -- Users
 INSERT INTO `Users` (`UserID`, `Email`, `Password`, `FullName`, `UniversityID`) VALUES
@@ -164,21 +194,21 @@ INSERT INTO `Users` (`UserID`, `Email`, `Password`, `FullName`, `UniversityID`) 
 
 -- RSOS
 INSERT INTO `rsos` (`RSOID`, `Name`, `Description`, `AdminID`, `UniversityID`, `ImageURL`) VALUES
-(1, 'UCF Coding Club', 'A club for students interested in coding and programming.', 1, 1, 'https://ucfcc.example.com/logo.png'),
-(2, 'UCF Robotics Society', 'A society dedicated to robotics and automation.', 2, 1, 'https://ucfrobotics.example.com/logo.png'),
-(3, 'UCF Chess Club', 'A club for students who enjoy playing chess.', 3, 1, 'https://ucfchess.example.com/logo.png'),
-(4, 'UCF Environmental Club', 'A club promoting environmental awareness and sustainability.', 4, 1, 'https://ucfenv.example.com/logo.png'),
-(5, 'UCF Engineering Society', 'A society for students pursuing engineering degrees.', 5, 1, 'https://ucfeng.example.com/logo.png'),
-(6, 'FSU Coding Club', 'A club for students interested in coding and programming.', 12, 2, 'https://fsucc.example.com/logo.png'),
-(7, 'FSU Robotics Society', 'A society dedicated to robotics and automation.', 13, 2, 'https://fsurobotics.example.com/logo.png'),
-(8, 'FSU Chess Club', 'A club for students who enjoy playing chess.', 14, 2, 'https://fsuchess.example.com/logo.png'),
-(9, 'FSU Environmental Club', 'A club promoting environmental awareness and sustainability.', 15, 2, 'https://fsuenv.example.com/logo.png'),
-(10, 'FSU Engineering Society', 'A society for students pursuing engineering degrees.', 16, 2, 'https://fsueng.example.com/logo.png'),
-(11, 'UF Coding Club', 'A club for students interested in coding and programming.', 37, 3, 'https://ufcc.example.com/logo.png'),
-(12, 'UF Robotics Society', 'A society dedicated to robotics and automation.', 38, 3, 'https://ufrobotics.example.com/logo.png'),
-(13, 'UF Chess Club', 'A club for students who enjoy playing chess.', 39, 3, 'https://ufchess.example.com/logo.png'),
-(14, 'UF Environmental Club', 'A club promoting environmental awareness and sustainability.', 40, 3, 'https://ufenv.example.com/logo.png'),
-(15, 'UF Engineering Society', 'A society for students pursuing engineering degrees.', 41, 3, 'https://ufeng.example.com/logo.png');
+(1, 'UCF Coding Club', 'A club for students interested in coding and programming.', 1, 1, ''),
+(2, 'UCF Robotics Society', 'A society dedicated to robotics and automation.', 2, 1, ''),
+(3, 'UCF Chess Club', 'A club for students who enjoy playing chess.', 3, 1, ''),
+(4, 'UCF Environmental Club', 'A club promoting environmental awareness and sustainability.', 4, 1, ''),
+(5, 'UCF Engineering Society', 'A society for students pursuing engineering degrees.', 5, 1, ''),
+(6, 'FSU Coding Club', 'A club for students interested in coding and programming.', 12, 2, ''),
+(7, 'FSU Robotics Society', 'A society dedicated to robotics and automation.', 13, 2, ''),
+(8, 'FSU Chess Club', 'A club for students who enjoy playing chess.', 14, 2, ''),
+(9, 'FSU Environmental Club', 'A club promoting environmental awareness and sustainability.', 15, 2, ''),
+(10, 'FSU Engineering Society', 'A society for students pursuing engineering degrees.', 16, 2, ''),
+(11, 'UF Coding Club', 'A club for students interested in coding and programming.', 37, 3, ''),
+(12, 'UF Robotics Society', 'A society dedicated to robotics and automation.', 38, 3, ''),
+(13, 'UF Chess Club', 'A club for students who enjoy playing chess.', 39, 3, ''),
+(14, 'UF Environmental Club', 'A club promoting environmental awareness and sustainability.', 40, 3, ''),
+(15, 'UF Engineering Society', 'A society for students pursuing engineering degrees.', 41, 3, '');
 
 -- RSO Members
 INSERT INTO `rsomembers` (`UserID`, `RSOID`) VALUES

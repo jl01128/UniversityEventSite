@@ -40,7 +40,7 @@ $rsos = orgs_get_all_rsos($university_id);
 
                 ?>
 
-                <div class="col-md-4 event-card">
+                <div class="col-md-4 event-card  my-4">
                     <div class="card h-100">
                         <img src="<?= $imageUrl ?>" class="card-img-top align-content-center" alt="">
                         <div class="card-body">
