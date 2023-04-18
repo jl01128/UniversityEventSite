@@ -179,6 +179,10 @@ function orgs_create_rso($universityId, $rsoName, $adminId, $memberEmails) {
         //Get the user
         $user = users_get_user_from_email($universityId, $email);
 
+        //Check that theyre in the domain
+        if ($user == null)
+            continue;
+
         //Add the user to the RSO
         orgs_add_member($rsoID, $user["UserID"]);
     }
@@ -211,6 +215,10 @@ function orgs_update_rso($universityId, $rsoId, $rsoName, $adminId, $memberEmail
 
         //Get the user
         $user = users_get_user_from_email($universityId, $email);
+
+        //Check that theyre in the domain
+        if ($user == null)
+            continue;
 
         //Add the user to the RSO
         orgs_add_member($rsoId, $user["UserID"]);
