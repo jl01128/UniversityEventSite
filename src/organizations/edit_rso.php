@@ -33,6 +33,11 @@ $rso = orgs_get_rso($universityId, $_GET["id"]);
 
 $members = orgs_get_members($_GET["id"]);
 
+//Check that the user is an admin
+if (!orgs_check_admin($universityId, $rso["RSOID"], $_SESSION["user_id"])) {
+    header('Location: /organizations/');
+}
+
 
 ?>
 
