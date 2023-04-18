@@ -75,8 +75,12 @@ if (isset($_POST['submit'])) {
                                name="memberEmails[]" placeholder="Email address">
                     <?php endfor; ?>
                 </div>
-                <button type="button" id="addMoreMembers" class="btn btn-secondary mb-7">Add more members</button>
-                <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Create RSO</button>
+                <div class="mb-2">
+                    <button type="button" id="addMoreMembers" class="btn btn-secondary  w-100">Add more members</button>
+                </div>
+                    <div class="mb-2">
+                        <button type="submit" id="submit" name="submit" class="btn btn-primary text-center w-100">Create RSO</button>
+                    </div>
             </form>
         </div>
 

@@ -55,6 +55,9 @@ $rsos = orgs_get_all_rsos($university_id);
                             <li class="list-group-item">
                                 <strong>Members: </strong> <?= $rsoMemberCount ?>
                             </li>
+                            <li class="list-group-item">
+                                <strong>Active: </strong> <?= $rso['Active'] ? "Active" : "Inactive" ?>
+                            </li>
                             <?php if ($is_admin) : ?>
                                 <li class="list-group-item">
                                     <a href="/organizations/edit_rso.php?id=<?= $rso["RSOID"] ?>"
