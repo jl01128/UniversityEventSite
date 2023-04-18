@@ -420,7 +420,12 @@ function events_get_event_rating($eventId) {
     $stmt->execute();
 
     //Get the result
-    return $stmt->fetchColumn();
+    $rating = $stmt->fetchColumn();
+
+    if ($rating == null)
+        $rating = 0;
+
+    return $rating;
 }
 
 function events_set_event_rating($eventId, $userId, $rating) {

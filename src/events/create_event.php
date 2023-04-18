@@ -47,8 +47,8 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
         });
     });
 
-    $(document).ready(function() {
-        $('#eventType').on('change', function() {
+    $(document).ready(function () {
+        $('#eventType').on('change', function () {
             if ($(this).val() === 'rso') {
                 $('#rsoIdField').show();
             } else {
@@ -116,82 +116,92 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBCmCpSOa0IWY9r2vSabM7nC5mbUSe9zU&callback=initMap"></script>
 
-<div class="h-60 d-flex align-items-center justify-content-center">
 
-    <!--Create RSO card.-->
-    <div class="card text-center w-25">
-        <div class="container">
-            <h1>Host Event</h1>
+<div class="p-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4 fw-normal">Create Event</h1>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col col-md-8 align-self-center h-100">
+            <div class="card h-100">
+                <div id="map" style="width: auto; height: 61rem;"></div>
+            </div>
+        </div>
+        <div class="col col-md-4 align-self-center">
             <form class="text-start" action="/events/create_event.php" method="post">
-                <div class="mb-3">
-                    <label for="rsoName" class="form-label">Event Name</label>
-                    <input type="text" class="form-control" id="eventName" name="eventName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="rsoName" class="form-label">Category</label>
-                    <input type="text" class="form-control" id="category" name="category" required>
-                </div>
-
-                <div class="form-group mb-2">
-                    <label for="inputEventDescription" required="required">Description</label>
-                    <input style="height:180px; padding-bottom:150px" type="text" name="description"
-                           class="form-control" id="description" aria-describedby="emailHelp"
-                           placeholder="Enter Description..." maxlength="500">
-                </div>
-
-
-                <div class="form-group mb-2">
-                    <label class="ml-3 form-control-placeholder mr-3" id="date" for="start">Date:&nbsp;</label>
-                    <input type="date" id="date" name="date" class="form-control text-left mr-2">
-                </div>
-
-                <div class="container px-1 px-sm-5 mx-auto mt-2">
-                    <div class="d-flex justify-content-center">
-                        <label for="appt">Start Time:&nbsp;</label>
-                        <input type="time" id="time" name="time" required>
+                <div class="row my-2">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <h5 class="card-header">
+                                Event Details
+                            </h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Event Name: </strong> <input type="text" class="form-control" id="eventName" name="eventName" required>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Category: </strong> <input type="text" class="form-control" id="category" name="category" required>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Description: </strong> <input style="height:180px; padding-bottom:150px" type="text" name="description"
+                                                                          class="form-control" id="description" aria-describedby="emailHelp"
+                                                                          placeholder="Enter Description..." maxlength="500">
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Event Type: </strong> <select class="form-control" id="eventType" name="eventType" required="required">
+                                        <option value="public">Public</option>
+                                        <option value="private">Private</option>
+                                        <option value="rso">Student Organization</option>
+                                    </select>
+                                </li>
+                                <li class="list-group-item" id="rsoIdField" style="display: none;">
+                                    <strong>Organization: </strong> <select class="form-control" id="rsoID" name="rsoID">
+                                        <option disabled selected value> Select an organization.... </option>
+                                        <?php foreach ($userRsos as $RSO) : ?>
+                                            <option value="<?php echo $RSO['RSOID']; ?>"><?php echo $RSO['Name']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Contact Email:</strong>
+                                    <input type="text" class="form-control" id="contactEmail" name="contactEmail" required>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Contact Phone:</strong>
+                                    <input type="tel" class="form-control" id="contactPhone" name="contactPhone" maxlength="10"
+                                           required>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="mt-2 d-flex justify-content-center">
-                    <div id="map" style="width: 100%; height: 300px;"></div>
+                <div class="row my-2">
+                    <div class="col-md-12 align-self-center">
+                        <div class="card">
+                            <h5 class="card-header">
+                                Event Location & Time
+                            </h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <strong>Address: </strong> <input type="text" class="form-control" id="address-fake" disabled>
+                                    <input type="num" class="col-2" name="latitude" id="latitude" maxlength="50" hidden required>
+                                    <input type="num" class="col-2" name="longitude" id="longitude" maxlength="50" hidden required>
+                                    <input type="text" class="form-control" id="address" name="address" required hidden>
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Date:</strong> <input type="date" id="date" name="date" class="form-control text-left mr-2">
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Time:</strong> <input type="time" id="time" name="time" required>
+                                </li>
+                            </ul>
+                            <div class="card-body">
+                                <button type="submit" id="submit" name="submit" class="btn btn-primary text-center w-100">Create Event
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <input type="num" class="col-2" name="latitude" id="latitude" maxlength="50" hidden required>
-                <input type="num" class="col-2" name="longitude" id="longitude" maxlength="50" hidden required>
-
-                <input type="text" class="form-control" id="address" name="address" required hidden>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address-fake" disabled>
-                </div>
-
-                <div class="mb-3">
-                    <label for="phone" class="form-label">Phone</label>
-                    <input type="tel" class="form-control" id="contactPhone" name="contactPhone" maxlength="10"
-                           required>
-                </div>
-                <div class="mb-3">
-                    <label for="rsoName" class="form-label">Email Address</label>
-                    <input type="text" class="form-control" id="contactEmail" name="contactEmail" required>
-                </div>
-                <div class="mb-3">
-                    <label for="eventType" class="form-label">Event type</label>
-                    <select class="form-control" id="eventType" name="eventType" required="required">
-                        <option value="public">Public</option>
-                        <option value="private">Private</option>
-                        <option value="rso">Student Organization</option>
-                    </select>
-                </div>
-                <div class="mb-3" id="rsoIdField" style="display: none;">
-                    <label for="rsoID" class="form-label">Organization</label>
-                    <select class="form-control" id="rsoID" name="rsoID">
-                        <option disabled selected value> Select an organization.... </option>
-                        <?php foreach ($userRsos as $RSO) : ?>
-                            <option value="<?php echo $RSO['RSOID']; ?>"><?php echo $RSO['Name']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Create Event
-                </button>
             </form>
         </div>
     </div>

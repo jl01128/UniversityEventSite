@@ -73,11 +73,6 @@ if ($event["EventType"] == 'rso') {
 //Get the result
 $eventRating = events_get_event_rating($_GET["id"]);
 
-//If its null, just say no ratings
-if ($eventRating == null) {
-    $eventRating = "No Ratings.";
-}
-
 //Get the comments
 $comments = comments_get_comments($_GET["id"]);
 
@@ -168,6 +163,8 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
                                 <strong>Rating:</strong>
                                 <?php for ($i = 0; $i < $eventRating; $i++): ?> <i
                                     class="fa-solid fa-star"></i> <?php endfor; ?>
+                                <?php for ($i = 5; $i > $eventRating; $i--): ?> <i
+                                    class="fa-regular fa-star"></i> <?php endfor; ?>
                             </li>
                         </ul>
                     </div>
