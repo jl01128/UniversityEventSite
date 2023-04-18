@@ -18,7 +18,9 @@ if (isset($_POST['submit'])) {
     $contactPhone = ($_POST['contactPhone']);
     $contactEmail = ($_POST['contactEmail']);
     $eventType = ($_POST['eventType']);
-    $rsoID = ($_POST['rsoID']);
+    $rsoID = null;
+    if ($eventType == 'rso')
+        $rsoID = ($_POST['rsoID']);
     $universityID = ($_SESSION["user_universityid"]);
 
     events_create_event($universityID, $eventName, $category, $description, $time, $date, $latitude, $longitude, $address, $contactPhone, $contactEmail, $eventType, $rsoID);
@@ -112,9 +114,6 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
             .catch((e) => window.alert("Geocoder failed due to: " + e));
     }
 </script>
-
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBCmCpSOa0IWY9r2vSabM7nC5mbUSe9zU&callback=initMap"></script>
 
 
 <div class="p-5 pb-md-4 mx-auto text-center">

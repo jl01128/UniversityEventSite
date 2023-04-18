@@ -35,9 +35,9 @@ $university = university_get_university($university_id);
         }
 
         //Init the maps
-        initMap();
+
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBCmCpSOa0IWY9r2vSabM7nC5mbUSe9zU&callback=initMap"></script>
+
 
     <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
         <h1 class="display-4 fw-normal"><?= $university["Name"]; ?> Events</h1>
@@ -62,7 +62,7 @@ $university = university_get_university($university_id);
                 $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$location['Longitude']}";
                 ?>
 
-                <div class="col-md-4 event-card">
+                <div class="col-md-4 my-4 event-card">
                     <?php
                     if ($event["EventType"] == 'rso' || orgs_check_membership($university_id, $event["RSOID"], $user_id) || $event["EventType"] === 'public' || $event["EventType"] === 'private') : ?>
                         <div class="card h-100">
