@@ -95,22 +95,27 @@ INSERT INTO `users` (`UserID`, `Email`, `Password`, `FullName`, `UniversityID`) 
 (7, 'William.G@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'William Green', 1),
 (8, 'Sophia.H@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Sophia Hernandez', 1),
 (9, 'Christopher.I@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Christopher Irwin', 1),
-(10, 'Ava.J@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Ava Jones', 1);
+(10, 'Ava.J@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Ava Jones', 1),
+(11, 'Jammy@knights.ucf.edu', '$2y$10$B/WXX.o/v7qRSivz7D2tE.5QhAhGUYsA5PBreo6vTCByLKa9M3wFC', 'Jamal Wallace', 1);
 
 INSERT INTO `rsos` (`RSOID`, `Name`, `AdminID`, `UniversityID`) VALUES
 (1, 'Johns Best Friends', 1, 1),
-(2, 'John A Hate club', 6, 1);
+(2, 'John A Hate club', 6, 1),
+(3, 'Jammy & Friends!', 11, 1);
 
 INSERT INTO `locations` (`LocationID`, `Name`, `Latitude`, `Longitude`) VALUES
 (1, 'Johns Best Friend Party!', '28.598262', '-81.209210'),
 (2, 'Johns Birthday Sunday-Funday Brunch.', '28.543671', '-81.379319'),
-(3, 'John A birthday ruining planning.', '28.597697', '-81.199409');
+(3, 'John A birthday ruining planning.', '28.597697', '-81.199409'),
+(4, 'Jammy\'s Office Pop', '28.597039', '-81.222055');
 
 
 INSERT INTO `events` (`EventID`, `Name`, `Category`, `Description`, `Time`, `Date`, `LocationID`, `ContactPhone`, `ContactEmail`, `EventType`, `RSOID`, `UniversityID`, `Approved`) VALUES
 (1, 'Johns Best Friend Party!', 'Birthday party.', 'Johns dorm party! Be there if you are a real friend!', '18:00:00', '2023-06-12', 1, '801-343-56', 'John.A@knights.ucf.edu', 'rso', 1, 1, 0),
 (2, 'Johns Birthday Sunday-Funday Brunch.', 'Brunch', 'Brunch downtown at elixre with my best friends!', '10:00:00', '2023-06-11', 2, '801-343-56', 'John.A@knights.ucf.edu', 'rso', 1, 1, 0),
-(3, 'John A birthday ruining planning.', 'Being Mean', 'We are meeting up to discuss how to ruin his birthday!', '15:00:00', '2023-06-11', 3, '3284449827', 'Olivia.F@knights.ucf.edu', 'rso', 2, 1, 0);
+(3, 'John A birthday ruining planning.', 'Being Mean', 'We are meeting up to discuss how to ruin his birthday!', '15:00:00', '2023-06-11', 3, '3284449827', 'Olivia.F@knights.ucf.edu', 'rso', 2, 1, 0),
+(4, 'Jammy\'s Office Pop', 'Party', 'Jammy office pop party! Everyone come!', '18:00:00', '2023-04-28', 4, '865-818-90', 'jammy@knights.ucf.edu', 'rso', 3, 1, 0);
+
 
 
 INSERT INTO `ratings` (`UserID`, `EventID`, `Stars`) VALUES
@@ -127,11 +132,16 @@ INSERT INTO `rsomembers` (`UserID`, `RSOID`) VALUES
 (1, 1),
 (2, 1),
 (3, 1),
+(3, 3),
 (4, 1),
 (4, 2),
 (5, 1),
+(5, 3),
 (6, 2),
 (7, 2),
 (8, 2),
+(8, 3),
 (9, 2),
-(10, 2);
+(10, 2),
+(10, 3),
+(11, 3);
