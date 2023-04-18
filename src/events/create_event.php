@@ -20,10 +20,16 @@ if (isset($_POST['submit'])) {
     $rsoID = ($_POST['rsoID']);
     $universityID = ($_SESSION["user_universityid"]);
 
-
     events_create_event($universityID, $eventName, $category, $description, $time, $date, $latitude, $longitude, $contactPhone, $contactEmail, $eventType, $rsoID);
 
 }
+
+$userId = $_SESSION["user_id"];
+$universityId = $_SESSION["user_universityid"];
+
+
+//Get the orgs the user is part of
+$userRsos = orgs_get_user_orgs_admin($universityId, $userId);
 
 ?>
 
@@ -32,6 +38,58 @@ if (isset($_POST['submit'])) {
         Error: <?php echo $error; ?>
     </div>
 <?php endif; ?>
+
+<script>
+    $(document).ready(function () {
+        $("#addMoreMembers").click(function () {
+            $('<input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address">').appendTo("#memberEmailsContainer");
+        });
+    });
+
+    $(document).ready(function() {
+        $('#eventType').on('change', function() {
+            if ($(this).val() === 'rso') {
+                $('#rsoIdField').show();
+            } else {
+                $('#rsoIdField').hide();
+            }
+        });
+    });
+</script>
+<script>
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 0, lng: 0},
+            zoom: 3
+        });
+
+        // Create a marker object
+        var marker = new google.maps.Marker({
+            map: map,
+            draggable: true
+        });
+
+        // Hide the marker initially
+        marker.setVisible(false);
+
+        // Add click event listener to the map
+        map.addListener('click', function (event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+
+            // Update the marker position and show it
+            marker.setPosition(event.latLng);
+            marker.setVisible(true);
+        });
+
+        // Update latitude and longitude fields when the marker is dragged
+        marker.addListener('dragend', function (event) {
+            document.getElementById('latitude').value = event.latLng.lat();
+            document.getElementById('longitude').value = event.latLng.lng();
+        });
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBCmCpSOa0IWY9r2vSabM7nC5mbUSe9zU&callback=initMap"></script>
 
 <div class="h-60 d-flex align-items-center justify-content-center">
 
@@ -88,60 +146,24 @@ if (isset($_POST['submit'])) {
                 <div class="mb-3">
                     <label for="eventType" class="form-label">Event type</label>
                     <select class="form-control" id="eventType" name="eventType" required="required">
-                        <option>Public</option>
-                        <option>Private</option>
-                        <option>RSO</option>
+                        <option value="public">Public</option>
+                        <option value="private">Private</option>
+                        <option value="rso">Student Organization</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label for="rsoID" class="form-label">RSOID</label>
-                    <input type="number" class="form-control" id="rsoID" name="rsoID" maxlength="6">
+                <div class="mb-3" id="rsoIdField" style="display: none;">
+                    <label for="rsoID" class="form-label">Organization</label>
+                    <select class="form-control" id="rsoID" name="rsoID">
+                        <option disabled selected value> Select an organization.... </option>
+                        <?php foreach ($userRsos as $RSO) : ?>
+                            <option value="<?php echo $RSO['RSOID']; ?>"><?php echo $RSO['Name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Create Event
                 </button>
             </form>
         </div>
-
-        <script>
-            $(document).ready(function () {
-                $("#addMoreMembers").click(function () {
-                    $('<input type="email" class="form-control mb-2 memberEmails" id="memberEmails[]" name="memberEmails[]" placeholder="Email address">').appendTo("#memberEmailsContainer");
-                });
-            });
-        </script>
-        <script>
-            function initMap() {
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: 0, lng: 0},
-                    zoom: 3
-                });
-
-                // Create a marker object
-                var marker = new google.maps.Marker({
-                    map: map,
-                    draggable: true
-                });
-
-                // Hide the marker initially
-                marker.setVisible(false);
-
-                // Add click event listener to the map
-                map.addListener('click', function (event) {
-                    document.getElementById('latitude').value = event.latLng.lat();
-                    document.getElementById('longitude').value = event.latLng.lng();
-
-                    // Update the marker position and show it
-                    marker.setPosition(event.latLng);
-                    marker.setVisible(true);
-                });
-
-                // Update latitude and longitude fields when the marker is dragged
-                marker.addListener('dragend', function (event) {
-                    document.getElementById('latitude').value = event.latLng.lat();
-                    document.getElementById('longitude').value = event.latLng.lng();
-                });
-            }
-        </script>
     </div>
 </div>
 

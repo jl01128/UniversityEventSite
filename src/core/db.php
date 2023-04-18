@@ -238,6 +238,24 @@ function orgs_update_rso($universityId, $rsoId, $rsoName, $adminId, $memberEmail
 
 }
 
+function orgs_get_user_orgs_admin($universityId, $userId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    // Fetch RSOs for the user's university
+    $stmt = $dbConn->prepare('SELECT * FROM RSOs WHERE UniversityID = :universityId AND AdminID = :adminId');
+    $stmt->bindParam(':universityId', $universityId);
+    $stmt->bindParam(':adminId', $userId);
+
+    $stmt->execute();
+
+    $rsos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return$rsos;
+}
+
+
 function orgs_get_members($rsoId) {
 
     //Get connection
@@ -323,7 +341,7 @@ function events_create_event($universityId, $eventName, $category, $description,
     //Create the location
     $locationId = locations_create_location($eventName, $latitude, $longitude);
 
-    if ($eventType != 'RSO')
+    if ($eventType != 'rso')
         $rsoID = null;
 
     $stmt = $dbConn->prepare("INSERT INTO EVENTS (Name, Category, Description, Time, Date, LocationID, ContactPhone, ContactEmail, EventType, RSOID, UniversityID, APPROVED) VALUES (:eventName, :category, :description, :time, :date, :locationId, :contactPhone, :contactEmail, :eventType, :rsoID, :universityID, false)");

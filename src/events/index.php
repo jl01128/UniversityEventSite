@@ -9,6 +9,35 @@ $university_id = $_SESSION["user_universityid"];
 // Fetch RSOs for the user's university
 $events = events_get_all_events($university_id);
 ?>
+
+    <script>
+
+        function initMap() {
+            <?php foreach ($events as $event) { ?>
+            <?php
+            if ($event["EventType"] == 'rso' && !orgs_check_membership($university_id, $event["RSOID"], $user_id)) {
+                continue;
+            }
+            $location = location_get_location($event["LocationID"]);
+            ?>
+            var map<?= $event['EventID'] ?> = new google.maps.Map(document.getElementById('map<?= $event['EventID'] ?>'), {
+                center: {lat: <?= $location['Latitude'] ?>, lng: <?= $location['Longitude'] ?>},
+                zoom: 15
+            });
+
+            // Add a marker for each event
+            var marker<?= $event['EventID'] ?> = new google.maps.Marker({
+                position: {lat: <?= $location['Latitude'] ?>, lng: <?= $location['Longitude'] ?>},
+                map: map<?= $event['EventID'] ?>
+            });
+            <?php } ?>
+        }
+
+        //Init the maps
+        initMap();
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBCmCpSOa0IWY9r2vSabM7nC5mbUSe9zU&callback=initMap"></script>
+
     <div class="container">
         <div class="row">
             <?php foreach ($events as $event) { ?>
@@ -52,33 +81,6 @@ $events = events_get_all_events($university_id);
             <?php } ?>
         </div>
     </div>
-    <script>
-        // Initialize the maps
-        function initMap() {
-            <?php foreach ($events as $event) { ?>
-            <?php
-            if ($event["EventType"] == 'rso' && !orgs_check_membership($university_id, $event["RSOID"], $user_id)) {
-                continue;
-            }
-            $location = location_get_location($event["LocationID"]);
-            ?>
-            // Create a map for each event
-            var map<?= $event['EventID'] ?> = new google.maps.Map(document.getElementById('map<?= $event['EventID'] ?>'), {
-                center: {lat: <?= $location['Latitude'] ?>, lng: <?= $location['Longitude'] ?>},
-                zoom: 15
-            });
-
-            // Add a marker for each event
-            var marker<?= $event['EventID'] ?> = new google.maps.Marker({
-                position: {lat: <?= $location['Latitude'] ?>, lng: <?= $location['Longitude'] ?>},
-                map: map<?= $event['EventID'] ?>
-            });
-            <?php } ?>
-        }
-
-        //Init the maps
-        initMap();
-    </script>
 
 
 <?php
