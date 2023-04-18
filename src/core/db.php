@@ -527,6 +527,61 @@ function comments_get_comments($eventId) {
 }
 
 
+function delete_comments($commentID) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the rating of the event
+    $statement = 'DELETE FROM comments WHERE commentID = :commentID';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':commentID', $commentID);
+
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    return $stmt->fetch();
+}
+
+function edit_comments($commentID, $newContent) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    $stmt = $dbConn->prepare('UPDATE comments SET Content = :newContent WHERE CommentID = :commentID');
+    $stmt->bindParam(':commentID', $commentID);
+    $stmt->bindParam(':newContent', $newContent);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    return $stmt->fetch();
+}
+
+function user_comments($userId, $eventId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    
+    // Insert the RSO
+    $stmt = $dbConn->prepare('SELECT * FROM comments WHERE (UserId = :userId) AND (EventID = :eventId)');
+    $stmt->bindParam(':userId', $userId);
+    $stmt->bindParam(':eventId', $eventId);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    //$count = $stmt->fetchColumn();
+        
+
+    return $stmt->fetchAll();
+}
 
 
 ?>

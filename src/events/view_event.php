@@ -72,6 +72,7 @@ if ($eventRating == null) {
 //Get the comments
 $comments = comments_get_comments($_GET["id"]);
 
+
 ?>
 
 
@@ -153,6 +154,8 @@ $comments = comments_get_comments($_GET["id"]);
                 </div>
                 <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Add a Comment</button>
             </form>
+          
+            <a href="/events/edit_comments.php?id=<?=$event["EventID"]?>" class="nav-link">Edit Your Comment</a>
         </div>
     </div>
 </div>
