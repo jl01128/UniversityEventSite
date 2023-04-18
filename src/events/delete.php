@@ -12,6 +12,6 @@ if (isset($_POST['submit'])) {
 
 
     //Redirect!
-    header('Location: /events/edit_comments.php?id='.$_POST['commentID']);
+    header('Location: /events/view_event.php?id='.$_POST['eventId']);
 
 }

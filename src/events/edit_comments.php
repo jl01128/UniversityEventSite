@@ -24,6 +24,7 @@ $userComments = user_comments($user_id, $_GET["id"]);
                         <div class="card-body">
                             
                             <form class="text-start" action="/events/edit.php" method="post">
+                                <input type="hidden" class="form-control" id="eventId" name="eventId" aria-describedby="eventId" value="<?=$_GET["id"];?>" required>
                                 <input type="hidden" class="form-control" id="commentID" name="commentID" aria-describedby="commentID" value="<?=$comment["CommentID"];?>" required>
                                 <div class="mb-3">
                                 
@@ -34,6 +35,7 @@ $userComments = user_comments($user_id, $_GET["id"]);
                             
 
                             <form class="text-start" action="/events/delete.php" method="post">
+                                <input type="hidden" class="form-control" id="eventId" name="eventId" aria-describedby="eventId" value="<?=$_GET["id"];?>" required>
                                 <input type="hidden" class="form-control" id="commentID" name="commentID" aria-describedby="commentID" value="<?=$comment["CommentID"];?>" required>
                                 <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Delete</button>
                             </form>
