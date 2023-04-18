@@ -78,9 +78,14 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
             document.getElementById('latitude').value = event.latLng.lat();
             document.getElementById('longitude').value = event.latLng.lng();
 
+
+            getAddress(event.latLng.lat(), event.latLng.lng());
+
             // Update the marker position and show it
             marker.setPosition(event.latLng);
             marker.setVisible(true);
+
+
         });
 
         // Update latitude and longitude fields when the marker is dragged
@@ -89,8 +94,26 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
             document.getElementById('longitude').value = event.latLng.lng();
         });
     }
+
+    function getAddress(lat, lon) {
+
+        const latlng = {
+            lat: lat,
+            lng: lon,
+        };
+
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({location: latlng})
+            .then((response) => {
+                document.getElementById('address').value = response.results[0].formatted_address;
+            })
+            .catch((e) => window.alert("Geocoder failed due to: " + e));
+    }
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBCmCpSOa0IWY9r2vSabM7nC5mbUSe9zU&callback=initMap"></script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBCmCpSOa0IWY9r2vSabM7nC5mbUSe9zU&callback=initMap"></script>
 
 <div class="h-60 d-flex align-items-center justify-content-center">
 

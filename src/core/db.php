@@ -348,13 +348,13 @@ function orgs_remove_member($rsoId, $memberId) {
     $stmt->execute();
 }
 
-function events_create_event($universityId, $eventName, $category, $description, $time, $date, $latitude, $longitude, $contactPhone, $contactEmail, $eventType, $rsoID) {
+function events_create_event($universityId, $eventName, $category, $description, $time, $date, $latitude, $longitude, $address, $contactPhone, $contactEmail, $eventType, $rsoID) {
 
     //Get connection
     $dbConn = db_get_connection();
 
     //Create the location
-    $locationId = locations_create_location($eventName, $latitude, $longitude);
+    $locationId = locations_create_location($address, $latitude, $longitude);
 
     if ($eventType != 'rso')
         $rsoID = null;

@@ -120,21 +120,6 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
         });
     }
 
-    function getAddress() {
-        const latlng = {
-            lat: <?= $location['Latitude'] ?>,
-            lng: <?= $location['Longitude'] ?>,
-        };
-
-        var geocoder = new google.maps.Geocoder();
-
-        geocoder.geocode({location: latlng})
-            .then((response) => {
-                document.getElementById('event-address').innerText = response.results[0].formatted_address;
-            })
-            .catch((e) => window.alert("Geocoder failed due to: " + e));
-    }
-
     window.initMap = initMap;
 
     //Init the maps
