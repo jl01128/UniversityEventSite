@@ -123,8 +123,7 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
                 <div class="container px-1 px-sm-5 mx-auto mt-2">
                     <div class="d-flex justify-content-center">
                         <label for="appt">Start Time:&nbsp;</label>
-                        <input type="time" id="time" name="time"
-                               min="06:00" max="18:00" required>
+                        <input type="time" id="time" name="time" required>
                     </div>
                 </div>
                 <div class="mt-2 d-flex justify-content-center">
