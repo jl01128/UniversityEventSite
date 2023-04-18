@@ -39,8 +39,11 @@ $university = university_get_university($university_id);
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBCmCpSOa0IWY9r2vSabM7nC5mbUSe9zU&callback=initMap"></script>
 
+    <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+        <h1 class="display-4 fw-normal"><?= $university["Name"]; ?> Events</h1>
+        <p class="fs-5 text-muted"><?= $university["Description"]; ?></p>
+    </div>
     <div class="container">
-        <h1 class="text-center mt-4 mb-4"><?= $university["Name"]; ?> Events</h1>
         <div class="row">
             <?php foreach ($events as $event) { ?>
                 <?php

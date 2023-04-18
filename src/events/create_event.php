@@ -12,6 +12,7 @@ if (isset($_POST['submit'])) {
     $description = ($_POST['description']);
     $time = ($_POST['time']);
     $date = ($_POST['date']);
+    $address = ($_POST['address']);
     $latitude = ($_POST['latitude']);
     $longitude = ($_POST['longitude']);
     $contactPhone = ($_POST['contactPhone']);
@@ -20,7 +21,7 @@ if (isset($_POST['submit'])) {
     $rsoID = ($_POST['rsoID']);
     $universityID = ($_SESSION["user_universityid"]);
 
-    events_create_event($universityID, $eventName, $category, $description, $time, $date, $latitude, $longitude, $contactPhone, $contactEmail, $eventType, $rsoID);
+    events_create_event($universityID, $eventName, $category, $description, $time, $date, $latitude, $longitude, $address, $contactPhone, $contactEmail, $eventType, $rsoID);
 
 }
 
@@ -132,6 +133,11 @@ $userRsos = orgs_get_user_orgs_admin($universityId, $userId);
 
                 <input type="num" class="col-2" name="latitude" id="latitude" maxlength="50" hidden required>
                 <input type="num" class="col-2" name="longitude" id="longitude" maxlength="50" hidden required>
+
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" name="address" required>
+                </div>
 
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone</label>
