@@ -58,6 +58,8 @@ if (isset($_POST['submit'])) {
 
 <?php
 
+$universityId = $_SESSION["user_universityid"];
+
 //Get the event
 $event = events_get_event($_SESSION["user_universityid"], $_GET["id"]);
 $location = location_get_location($event["LocationID"]);
@@ -126,7 +128,7 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
 
         var geocoder = new google.maps.Geocoder();
 
-        geocoder.geocode({ location: latlng })
+        geocoder.geocode({location: latlng})
             .then((response) => {
                 document.getElementById('event-address').innerText = response.results[0].formatted_address;
             })
@@ -140,14 +142,14 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
 </script>
 
 
-<div class="pricing-header p-5 pb-md-4 mx-auto text-center">
+<div class="p-5 pb-md-4 mx-auto text-center">
     <h1 class="display-4 fw-normal"><?= $event["Name"] ?></h1>
 </div>
 <div class="container">
     <div class="row">
-        <div class="col col-md-8 align-self-center">
+        <div class="col col-md-8 align-self-center h-100">
             <div class="card h-100">
-                <div id="map" style="width: 100%; height: 30rem;"></div>
+                <div id="map" style="width: auto; height: 35rem;"></div>
             </div>
         </div>
         <div class="col col-md-4 align-self-center">
@@ -164,22 +166,23 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
                             <li class="list-group-item">
                                 <strong>Category: </strong> <?= $event["Category"]; ?>
                             </li>
-                            <?php if($event["EventType"] == 'rso'): ?>
-                            <li class="list-group-item">
-                                <strong>Organzation: </strong> <?= $rso["Name"]; ?>
-                            </li>
-                            <?php endif;?>
+                            <?php if ($event["EventType"] == 'rso'): ?>
+                                <li class="list-group-item">
+                                    <strong>Organzation: </strong> <?= $rso["Name"]; ?>
+                                </li>
+                            <?php endif; ?>
                             <li class="list-group-item">
                                 <strong>Contact Email:</strong>
-                                <a href="mailto:<?= $event["ContactEmail"];?>"><?= $event["ContactEmail"];?></a>
+                                <a href="mailto:<?= $event["ContactEmail"]; ?>"><?= $event["ContactEmail"]; ?></a>
                             </li>
                             <li class="list-group-item">
                                 <strong>Contact Phone:</strong>
-                                <a href="tel:<?= $event["ContactPhone"];?>"><?= $event["ContactPhone"];?></a>
+                                <a href="tel:<?= $event["ContactPhone"]; ?>"><?= $event["ContactPhone"]; ?></a>
                             </li>
                             <li class="list-group-item">
                                 <strong>Rating:</strong>
-                                <?php for ($i = 0; $i < $eventRating; $i++):?> <i class="fa-solid fa-star"></i> <?php endfor; ?>
+                                <?php for ($i = 0; $i < $eventRating; $i++): ?> <i
+                                    class="fa-solid fa-star"></i> <?php endfor; ?>
                             </li>
                         </ul>
                     </div>
@@ -203,7 +206,8 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
                             </li>
                         </ul>
                         <div class="card-body">
-                            <a href="<?= $google_maps_url ?>" target="_blank" class="btn btn-primary w-100">Get Directions</a>
+                            <a href="<?= $google_maps_url ?>" target="_blank" class="btn btn-primary w-100">Get
+                                Directions</a>
                         </div>
                     </div>
                 </div>
@@ -212,8 +216,127 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
     </div>
 </div>
 
+<div class="container">
+    <div class="p-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-6 fw-normal">Comments</h1>
+    </div>
 
-<!--
+    <div class="row">
+        <div class="col col-md-6 align-self-top h-100">
+            <div class="comment-section">
+                <?php foreach ($comments as $eventComment) : ?>
+                    <?php
+
+                    $commentUser = users_get_user($universityId, $eventComment["UserID"]);
+
+                    ?>
+                    <div class="card">
+                        <h5 class="card-header">
+                            <strong><?= $commentUser["FullName"] ?></strong>
+                        </h5>
+                        <div class="card-body">
+                            <p class="card-text"><?= $eventComment["Content"]; ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div class="col col-md-6 align-self-top">
+            <div class="row my-2">
+                <div class="col-md-12">
+                    <div class="card">
+                        <h5 class="card-header">
+                            Leave a Rating
+                        </h5>
+                        <div class="card-body">
+
+                            <form class="text-center w-100" action="/events/update_rating.php" method="post">
+                                <input type="hidden" class="form-control" id="event_id" name="event_id"
+                                       value="<?= $_GET["id"] ?>" required>
+                                <div class="mb-3">
+                                    <div class="btn-group" role="group" aria-label="Rating">
+                                        <input type="radio" class="btn-check" name="rating" id="rating1"
+                                               value="1"<?= $eventRating == 1 ? ' checked' : '' ?> required>
+                                        <label class="btn btn-secondary" for="rating1">
+                                            <i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i
+                                                class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i
+                                                class="fa-regular fa-star"></i>
+                                        </label>
+
+                                        <input type="radio" class="btn-check" name="rating" id="rating2"
+                                               value="2"<?= $eventRating == 2 ? ' checked' : '' ?>>
+                                        <label class="btn btn-secondary" for="rating2">
+                                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                                class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i
+                                                class="fa-regular fa-star"></i>
+                                        </label>
+
+                                        <input type="radio" class="btn-check" name="rating" id="rating3"
+                                               value="3"<?= $eventRating == 3 ? ' checked' : '' ?>>
+                                        <label class="btn btn-secondary" for="rating3">
+                                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                                class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i
+                                                class="fa-regular fa-star"></i>
+                                        </label>
+
+                                        <input type="radio" class="btn-check" name="rating" id="rating4"
+                                               value="4"<?= $eventRating == 4 ? ' checked' : '' ?>>
+                                        <label class="btn btn-secondary" for="rating4">
+                                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                                class="fa-regular fa-star"></i>
+                                        </label>
+
+                                        <input type="radio" class="btn-check" name="rating" id="rating5"
+                                               value="5"<?= $eventRating == 5 ? ' checked' : '' ?>>
+                                        <label class="btn btn-secondary" for="rating5">
+                                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                                class="fa-solid fa-star"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" id="submit" name="submit"
+                                        class="btn btn-primary text-center w-100">Save Rating
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 align-self-center">
+                    <div class="card">
+                        <h5 class="card-header">
+                            Leave a Comment
+                        </h5>
+                        <div class="card-body">
+                            <form class="text-start" action="/events/add_comments.php" method="post">
+                                <input type="hidden" class="form-control" id="event_id" name="event_id"
+                                       value="<?= $_GET["id"] ?>" required>
+                                <div class="mb-3">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave a comment here"
+                                                  id="comment" name="comment"
+                                                  style="height: 200px; resize: none;"></textarea>
+                                        <label for="comment">Type your comment here.</label>
+                                    </div>
+                                </div>
+                                <button type="submit" id="submit" name="submit"
+                                        class="btn btn-primary text-center w-100">Add comment
+                                </button>
+                            </form>
+                            <a href="/events/edit_comments.php?id=<?= $event["EventID"] ?>" class="nav-link">Edit Your
+                                Comment</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--
 <div class="container">
     <div class="event-container">
         <h1>Host Event</h1>
@@ -287,6 +410,6 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
 
 -->
 
-<?php
-include_once('../core/footer.php');
-?>
+    <?php
+    include_once('../core/footer.php');
+    ?>
