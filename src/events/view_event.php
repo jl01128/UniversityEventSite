@@ -138,7 +138,7 @@ $comments = comments_get_comments($_GET["id"]);
                 <input type="hidden" class="form-control" id="event_id" name="event_id" aria-describedby="event_id" value="<?=$_GET["id"]?>" required>
                 <div class="mb-3">
                     <label for="rating" class="form-label">Rating</label>
-                    <input type="number" class="form-control" id="rating" name="rating" aria-describedby="rating" required>
+                    <input type="range" min="1" max="5" class="form-control" id="rating" name="rating" aria-describedby="rating" required>
                 </div>
                 <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Save Rating</button>
             </form>

@@ -432,6 +432,7 @@ function events_set_event_rating($eventId, $userId, $rating) {
 
     } catch (PDOException $e) {
         $error = "Error creating RSO: " . $e->getMessage();
+        echo $error;
     }
 }
 
