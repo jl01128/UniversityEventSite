@@ -160,12 +160,28 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
                                 <a href="tel:<?= $event["ContactPhone"]; ?>"><?= $event["ContactPhone"]; ?></a>
                             </li>
                             <li class="list-group-item">
+                                <strong>Approved: </strong><?=$event["Approved"] ? "Yes" : "No"; ?>
+                            </li>
+                            <li class="list-group-item">
                                 <strong>Rating:</strong>
                                 <?php for ($i = 0; $i < $eventRating; $i++): ?> <i
                                     class="fa-solid fa-star"></i> <?php endfor; ?>
                                 <?php for ($i = 5; $i > $eventRating; $i--): ?> <i
                                     class="fa-regular fa-star"></i> <?php endfor; ?>
                             </li>
+                            <?php if (university_check_superadmin($universityId, $_SESSION["user_id"]) && !$event["Approved"]): ?>
+                                <div class="card-body">
+                                    <form class="text-start" action="/events/approve_event.php" method="post">
+                                        <input type="hidden" class="form-control" id="event_id" name="event_id"
+                                               value="<?= $_GET["id"]; ?>" required>
+                                        <input type="hidden" class="form-control" id="university_id" name="university_id"
+                                               value="<?= $event["UniversityID"]; ?>" required>
+                                        <button type="submit" id="submit" name="submit"
+                                                class="btn btn-success text-center w-100">Approve Event
+                                        </button>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
@@ -316,81 +332,6 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
             </div>
         </div>
     </div>
-
-
-    <!--
-<div class="container">
-    <div class="event-container">
-        <h1>Host Event</h1>
-        <h2><?= $event["Name"] ?></h2>
-        <p><?= $event["Description"] ?></p>
-        <p>Category: <?= $event["Category"] ?></p>
-        <p>Time: <?= $event["Time"] ?></p>
-        <p>Date: <?= $event["Date"] ?></p>
-        <p>Location: <?= $event["LocationID"] ?></p>
-        <p>Contact Phone: <?= $event["ContactPhone"] ?></p>
-        <p>Contact Email: <?= $event["ContactEmail"] ?></p>
-        <p>RSOID: <?= $event["RSOID"] ?></p>
-        <p>Rating: <?= $eventRating ?> / 5 <i class="fas fa-star"></i></p>
-
-        <div id="map" style="width: 100%; height: 300px;"></div>
-        <button type="button"
-                onclick="window.open('https://maps.google.com/?q=<?= $location['Latitude'] ?>,<?= $location['Longitude'] ?>', '_blank')">
-            Get Directions
-        </button>
-
-        <form class="text-start" action="/events/update_rating.php" method="post">
-            <input type="hidden" class="form-control" id="event_id" name="event_id" value="<?= $_GET["id"] ?>" required>
-            <div class="mb-3">
-                <label for="rating" class="form-label">Rating</label>
-                <input type="range" min="1" max="5" class="form-control" id="rating" name="rating"
-                       value="<?= $eventRating ?>" oninput="ratingValue.value=rating.value" required>
-                <output name="ratingValue" id="ratingValue"><?= $eventRating ?></output>
-                / 5
-            </div>
-            <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Save Rating</button>
-        </form>
-
-        <h3>Comments</h3>
-        <div class="comment-section">
-            <?php foreach ($comments as $eventComment) : ?>
-                <div class="comment">
-                    <strong><?= $eventComment["Username"] ?>:</strong>
-                    <p><?= $eventComment["Content"]; ?></p>
-                </div>
-            <?php endforeach; ?>
-        </div>
-
-        <form class="text-start" action="/events/add_comments.php" method="post">
-            <input type="hidden" class="form-control" id="event_id" name="event_id" value="<?= $_GET["id"] ?>" required>
-            <div class="mb-3">
-                <label for="comment" class="form-label">Add a Comment</label>
-                <input type="text" class="form-control" id="comment" name="comment" aria-describedby="event_id"
-                       required>
-            </div>
-            <button type="submit" id="submit" name="submit" class="btn btn-primary text-center">Add a Comment</button>
-        </form>
-        <a href="/events/edit_comments.php?id=<?= $event["EventID"] ?>" class="nav-link">Edit Your Comment</a>
-    </div>
-</div>
-
-<script>
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: <?= $location['Latitude'] ?>, lng: <?= $location['Longitude'] ?>},
-            zoom: 15
-        });
-
-        var marker = new google.maps.Marker({
-            position: {lat: <?= $location['Latitude'] ?>, lng: <?= $location['Longitude'] ?>},
-            map: map
-        });
-    }
-
-    initMap();
-</script>
-
--->
 
     <?php
     include_once('../core/footer.php');

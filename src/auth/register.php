@@ -164,5 +164,5 @@ include_once('../core/db.php');
 
 
 <?php
-include_once('core/footer.php');
+include_once('../core/footer.php');
 ?>

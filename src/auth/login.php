@@ -57,5 +57,5 @@ $error = null;
 
 
 <?php
-include_once('core/footer.php');
+include_once('../core/footer.php');
 ?>

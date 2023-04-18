@@ -76,6 +76,15 @@ function university_get_university($universityId) {
     return $user;
 }
 
+function university_check_superadmin($universityId, $userId) {
+
+    //Get the uni
+    $uni = university_get_university($universityId);
+
+
+    return $uni["AdminID"] == $userId;
+}
+
 function users_get_user_from_email($universityId, $userEmail) {
 
     //Get connection
@@ -383,7 +392,7 @@ function events_get_all_events($universityId) {
     $dbConn = db_get_connection();
 
 
-    $stmt = $dbConn->prepare('SELECT * FROM events WHERE UniversityID = :university_id');
+    $stmt = $dbConn->prepare('SELECT * FROM events WHERE UniversityID = :university_id ORDER BY Date ASC');
     $stmt->execute(['university_id' => $universityId]);
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -397,6 +406,19 @@ function events_get_event($universityId, $eventId)
 
     $statement = 'SELECT * FROM Events WHERE EventID = :eventId AND UniversityID = :universityId';
     $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':universityId', $universityId);
+    $stmt->bindParam(':eventId', $eventId);
+    $stmt->execute();
+
+    return $stmt->fetch();
+}
+
+function events_approve_event($universityId, $eventId)
+{
+    //Get connection
+    $dbConn = db_get_connection();
+
+    $stmt = $dbConn->prepare('UPDATE events SET Approved = 1 WHERE UniversityID = :universityId AND EventID = :eventId');
     $stmt->bindParam(':universityId', $universityId);
     $stmt->bindParam(':eventId', $eventId);
     $stmt->execute();

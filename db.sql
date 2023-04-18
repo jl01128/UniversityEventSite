@@ -83,6 +83,12 @@ CREATE TABLE Ratings (
 );
 
 
+ALTER TABLE Ratings
+ADD CONSTRAINT check_stars_range CHECK (Stars BETWEEN 1 AND 5);
+
+ALTER TABLE Universities
+ADD CONSTRAINT unique_admin UNIQUE (AdminID);
+
 
 INSERT INTO `universities` (`UniversityID`, `Name`, `Location`, `Description`, `NumberOfStudents`, `ImageURL`) VALUES
 (1, 'University of Central Florida', 'Orlando, Florida', 'UCF Description!', 50000, 'https://1000logos.net/wp-content/uploads/2017/11/University-of-Central-Florida-Logo.png');
