@@ -61,6 +61,21 @@ function auth_login($email, $password) {
     return true;
 }
 
+function university_get_university($universityId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    $stmt = $dbConn->prepare("SELECT * FROM Universities WHERE UniversityID = :universityId");
+    $stmt->bindParam(':universityId', $universityId);
+    $stmt->execute();
+
+    $user = $stmt->fetch();
+
+
+    return $user;
+}
+
 function users_get_user_from_email($universityId, $userEmail) {
 
     //Get connection
