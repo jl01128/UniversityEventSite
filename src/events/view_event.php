@@ -166,7 +166,7 @@ $google_maps_url = "https://maps.google.com/?q={$location['Latitude']},{$locatio
                                 <strong>Rating:</strong>
                                 <?php for ($i = 0; $i < $eventRating; $i++): ?> <i
                                     class="fa-solid fa-star"></i> <?php endfor; ?>
-                                <?php for ($i = 5; $i > $eventRating; $i--): ?> <i
+                                <?php for ($i = 0; $i < (4 - $eventRating); $i++): ?> <i
                                     class="fa-regular fa-star"></i> <?php endfor; ?>
                             </li>
                             <?php if (university_check_superadmin($universityId, $_SESSION["user_id"]) && !$event["Approved"]): ?>

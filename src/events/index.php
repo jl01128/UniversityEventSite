@@ -9,6 +9,8 @@ $university_id = $_SESSION["user_universityid"];
 // Fetch RSOs for the user's university
 $events = events_get_all_events($university_id);
 $university = university_get_university($university_id);
+
+$is_superadmin = university_check_superadmin($university_id, $user_id);
 ?>
 
     <script>
@@ -19,6 +21,10 @@ $university = university_get_university($university_id);
             if ($event["EventType"] == 'rso' && !orgs_check_membership($university_id, $event["RSOID"], $user_id)) {
                 continue;
             }
+            if (!$is_superadmin && (($event["EventType"] === 'private' && $event["UniversityID"] !== $university_id) || ($event["EventType"] !== 'rso' && !$event["Approved"]))) {
+                continue;
+            }
+
             $location = location_get_location($event["LocationID"]);
             ?>
             var map<?= $event['EventID'] ?> = new google.maps.Map(document.getElementById('map<?= $event['EventID'] ?>'), {
@@ -50,7 +56,7 @@ $university = university_get_university($university_id);
                 if ($event["EventType"] == 'rso' && !orgs_check_membership($university_id, $event["RSOID"], $user_id)) {
                     continue;
                 }
-                if (($event["EventType"] === 'private' && $event["UniversityID"] !== $university_id) || ($event["EventType"] !== 'rso' && !$event["Approved"])) {
+                if (!$is_superadmin && (($event["EventType"] === 'private' && $event["UniversityID"] !== $university_id) || ($event["EventType"] !== 'rso' && !$event["Approved"]))) {
                     continue;
                 }
 

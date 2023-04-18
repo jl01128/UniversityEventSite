@@ -90,6 +90,7 @@ ALTER TABLE Universities
 ADD CONSTRAINT unique_admin UNIQUE (AdminID);
 
 
+
 INSERT INTO `universities` (`UniversityID`, `Name`, `Location`, `Description`, `NumberOfStudents`, `ImageURL`) VALUES
 (1, 'University of Central Florida', 'Orlando, Florida', 'UCF Description!', 50000, 'https://1000logos.net/wp-content/uploads/2017/11/University-of-Central-Florida-Logo.png');
 
@@ -112,10 +113,10 @@ INSERT INTO `rsos` (`RSOID`, `Name`, `AdminID`, `UniversityID`) VALUES
 (3, 'Jammy & Friends!', 11, 1);
 
 INSERT INTO `locations` (`LocationID`, `Name`, `Latitude`, `Longitude`) VALUES
-(1, 'Johns Best Friend Party!', '28.598262', '-81.209210'),
-(2, 'Johns Birthday Sunday-Funday Brunch.', '28.543671', '-81.379319'),
-(3, 'John A birthday ruining planning.', '28.597697', '-81.199409'),
-(4, 'Jammy\'s Office Pop', '28.597039', '-81.222055');
+(1, '12113 Napiers Circle, Orlando, FL 32826', '28.598262', '-81.209210'),
+(2, '9 W Washington St, Orlando, FL 32801', '28.543671', '-81.379319'),
+(3, '12715 Pegasus Dr, Orlando, FL 32816', '28.597697', '-81.199409'),
+(4, '11448 University Blvd, Orlando, FL 32817', '28.597039', '-81.222055');
 
 
 INSERT INTO `events` (`EventID`, `Name`, `Category`, `Description`, `Time`, `Date`, `LocationID`, `ContactPhone`, `ContactEmail`, `EventType`, `RSOID`, `UniversityID`, `Approved`) VALUES

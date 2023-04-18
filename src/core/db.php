@@ -184,14 +184,16 @@ function orgs_get_rsoid($universityId, $rsoName) {
 }
 
 
-function orgs_create_rso($universityId, $rsoName, $adminId, $memberEmails) {
+function orgs_create_rso($universityId, $rsoName, $rsoDescription, $rsoImage, $adminId, $memberEmails) {
 
     //Get connection
     $dbConn = db_get_connection();
 
     // Insert the RSO
-    $stmt = $dbConn->prepare("INSERT INTO RSOs (Name, AdminID, UniversityID) VALUES (:name, :adminID, :universityID)");
+    $stmt = $dbConn->prepare("INSERT INTO RSOs (Name, AdminID, Description, ImageURL, UniversityID) VALUES (:name, :rsoDescription,:rsoImage,:adminID, :universityID)");
     $stmt->bindParam(':name', $rsoName);
+    $stmt->bindParam(':rsoDescription', $rsoDescription);
+    $stmt->bindParam(':rsoImage', $rsoImage);
     $stmt->bindParam(':adminID', $adminId);
     $stmt->bindParam(':universityID', $universityId);
     $stmt->execute();

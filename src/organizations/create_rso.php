@@ -8,6 +8,8 @@ $error = null;
 // Check if the form is submitted
 if (isset($_POST['submit'])) {
     $rsoName = trim($_POST['rsoName']);
+    $rsoDescription = trim($_POST['rsoDescription']);
+    $rsoImage = trim($_POST['rsoImage']);
     $universityID = intval($_POST['universityID']);
     $memberEmails = array_filter($_POST['memberEmails'], 'strlen');
 
@@ -55,6 +57,14 @@ if (isset($_POST['submit'])) {
                     <label for="rsoName" class="form-label">RSO Name</label>
                     <input type="text" class="form-control" id="rsoName" name="rsoName" required>
                 </div>
+                <div class="mb-3">
+                    <label for="rsoDescription" class="form-label">RSO Description</label>
+                    <input type="text" class="form-control" id="rsoDescription" name="rsoDescription" required>
+                </div><div class="mb-3">
+                    <label for="rsoImage" class="form-label">RSO Image URL</label>
+                    <input type="text" class="form-control" id="rsoImage" name="rsoImage" required>
+                </div>
+
                 <input type="number" class="form-control" id="universityID" name="universityID" required hidden value="<?=$_SESSION["user_universityid"];?>">
                 <div class="mb-3" id="memberEmailsContainer">
                     <label for="memberEmails[]" class="form-label">Member Email Addresses</label>
