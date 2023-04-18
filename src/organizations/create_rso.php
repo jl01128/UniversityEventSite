@@ -14,10 +14,14 @@ if (isset($_POST['submit'])) {
     // Get the current user's ID as the admin
     $adminID = $_SESSION["user_id"];
 
-    if (empty($rsoName) || empty($universityID) || count($memberEmails) < 4) {
-        $error = "All fields are required, and at least 4 members should be added.";
-    } else {
+    //Check if the rso alreaxy exists with this name
+    $rsoId = orgs_get_rsoid($universityID, $rsoName);
+    if ($rsoId != null) {
+        $error = "An RSO already exists with this name.";
+    }
 
+    //Error checking
+    if ($error == null) {
 
         //Create the RSO
         orgs_create_rso($universityID, $rsoName, $adminID, $memberEmails);
@@ -28,10 +32,10 @@ if (isset($_POST['submit'])) {
         //Add admin to the rso
         orgs_add_member($rsoId, $adminID);
 
-        header("Location: /organizations/edit_rso.php?id=".$rsoId);
+        header("Location: /organizations/edit_rso.php?id=" . $rsoId);
     }
-}
 
+}
 ?>
 
 <?php if ($error != null) : ?>
@@ -51,10 +55,7 @@ if (isset($_POST['submit'])) {
                     <label for="rsoName" class="form-label">RSO Name</label>
                     <input type="text" class="form-control" id="rsoName" name="rsoName" required>
                 </div>
-                <div class="mb-3">
-                    <label for="universityID" class="form-label">University ID</label>
-                    <input type="number" class="form-control" id="universityID" name="universityID" required>
-                </div>
+                <input type="number" class="form-control" id="universityID" name="universityID" required hidden value="<?=$_SESSION["user_universityid"];?>">
                 <div class="mb-3" id="memberEmailsContainer">
                     <label for="memberEmails[]" class="form-label">Member Email Addresses</label>
                     <?php for ($i = 0;
