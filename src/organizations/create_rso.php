@@ -26,13 +26,13 @@ if (isset($_POST['submit'])) {
     if ($error == null) {
 
         //Create the RSO
-        orgs_create_rso($universityID, $rsoName, $adminID, $memberEmails);
+        orgs_create_rso($universityID, $rsoName, $rsoDescription, $rsoImage, $adminID, $memberEmails);
 
         //Get the new RSOID
         $rsoId = orgs_get_rsoid($universityID, $rsoName);
 
         //Add admin to the rso
-        orgs_add_member($rsoId, $adminID);
+        orgs_add_member($rsoId["RSOID"], $adminID);
 
         header("Location: /organizations/edit_rso.php?id=" . $rsoId);
     }

@@ -76,6 +76,19 @@ function university_get_university($universityId) {
     return $user;
 }
 
+function university_get_all_universities() {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    // Fetch RSOs for the user's university
+    $stmt = $dbConn->prepare('SELECT * FROM Universities');
+    $stmt->execute();
+    $unis = $stmt->fetchAll();
+
+    return $unis;
+}
+
 function university_check_superadmin($universityId, $userId) {
 
     //Get the uni
@@ -101,6 +114,27 @@ function users_get_user_from_email($universityId, $userEmail) {
     return $user;
 }
 
+function users_user_email_exists($email) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Get the rating of the event
+    $statement = 'SELECT COUNT(*) FROM Users WHERE Email = :email';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':email', $email);
+
+    //Execute the statement
+    $stmt->execute();
+
+    //Get the result
+    $count = $stmt->fetchColumn();
+
+    //Get the result
+    return $count > 0;
+}
+
 function users_get_user($universityId, $userId) {
 
     //Get connection
@@ -115,6 +149,30 @@ function users_get_user($universityId, $userId) {
 
 
     return $user;
+}
+
+function users_create_user($email, $password, $fullName, $universityId) {
+
+    //Get connection
+    $dbConn = db_get_connection();
+
+    //Hash the password
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    //Create the statement.
+    $statement = 'INSERT INTO Users (Email, Password, FullName, UniversityID) VALUES (:email, :password, :fullName, :universityID)';
+
+    $stmt = $dbConn->prepare($statement);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':password', $hashedPassword);
+    $stmt->bindParam(':fullName', $fullName);
+    $stmt->bindParam(':universityID', $universityId);
+    $userId = $dbConn->lastInsertId();
+
+    //Execute the statement
+    $stmt->execute();
+
+    return $userId;
 }
 
 
@@ -180,7 +238,7 @@ function orgs_get_rsoid($universityId, $rsoName) {
     //Get the result
     $rso = $stmt->fetch();
 
-    return $rso["RSOID"];
+    return $rso;
 }
 
 
@@ -190,7 +248,7 @@ function orgs_create_rso($universityId, $rsoName, $rsoDescription, $rsoImage, $a
     $dbConn = db_get_connection();
 
     // Insert the RSO
-    $stmt = $dbConn->prepare("INSERT INTO RSOs (Name, AdminID, Description, ImageURL, UniversityID) VALUES (:name, :rsoDescription,:rsoImage,:adminID, :universityID)");
+    $stmt = $dbConn->prepare("INSERT INTO RSOs (Name, AdminID, Description, ImageURL, UniversityID) VALUES (:name, :adminID, :rsoDescription,:rsoImage, :universityID)");
     $stmt->bindParam(':name', $rsoName);
     $stmt->bindParam(':rsoDescription', $rsoDescription);
     $stmt->bindParam(':rsoImage', $rsoImage);

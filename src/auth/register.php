@@ -31,43 +31,12 @@ include_once('../core/db.php');
         if ($error == null) {
 
 
-            //Create the statement.
-            $statement = 'SELECT COUNT(*) FROM Users WHERE Email = :email';
-
-            $stmt = $dbConn->prepare($statement);
-            $stmt->bindParam(':email', $email);
-
-            //Execute the statement
-            $stmt->execute();
-
-            //Get the result
-            $count = $stmt->fetchColumn();
+            //Check if user already exists
+            $user = users_user_email_exists($email);
 
             //If its not zero, it already exists!
             if ($count != 0) {
                 $error = "A User with this email already exists!";
-            }
-        }
-
-        //Check that the university id is valid
-        if ($error == null) {
-
-
-            //Create the statement.
-            $statement = 'SELECT COUNT(*) FROM universities WHERE UniversityID = :universityId';
-
-            $stmt = $dbConn->prepare($statement);
-            $stmt->bindParam(':universityId', $universityId);
-
-            //Execute the statement
-            $stmt->execute();
-
-            //Get the result
-            $count = $stmt->fetchColumn();
-
-            //If its not zero, it already exists!
-            if ($count == 0) {
-                $error = "Invalid university id.";
             }
         }
 
@@ -76,48 +45,25 @@ include_once('../core/db.php');
         if ($error == null) {
 
 
-            //Hash the password
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            //Create the user
+            $user = users_get_user($universityId, users_create_user($email, $password, $fullName, $universityId));
 
-            //Create the statement.
-            $statement = 'INSERT INTO Users (Email, Password, FullName, UniversityID) VALUES (:email, :password, :fullName, :universityID)';
+            //Login!
+            auth_login($email, $password);
 
-            $stmt = $dbConn->prepare($statement);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $hashedPassword);
-            $stmt->bindParam(':fullName', $fullName);
-            $stmt->bindParam(':universityID', $universityId);
-
-            //Execute the statement
-            $stmt->execute();
+            header('Location: /events/index.php');
         }
 
-        //If theres no errors, set the session!
-        if ($error == null) {
-
-            //Create the statement.
-            $statement = 'SELECT UserID, Password, FullName, UniversityID FROM Users WHERE Email = :email';
-
-            $stmt = $dbConn->prepare($statement);
-            $stmt->bindParam(':email', $email);
-
-            //Execute the statement
-            $stmt->execute();
-
-            //Get the result
-            $queryResult = $stmt->fetch();
-
-            $_SESSION["user_id"] = $queryResult["UserID"];
-            $_SESSION["user_universityid"] = $queryResult["UniversityID"];
-            $_SESSION["user_fullname"] = $queryResult["FullName"];
-        }
 
 
         //If theres no errors then go back to the index!
         if ($error == null) {
-            header('Location: /index.php');
+            header('Location: /events/index.php');
         }
     }
+
+
+    $universities = university_get_all_universities();
 
 ?>
 
@@ -145,8 +91,12 @@ include_once('../core/db.php');
                     <input type="text" class="form-control" id="fullName" name="fullName" required>
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label">University ID Number</label>
-                    <input type="number" class="form-control" id="universityId" name="universityId" required>
+                    <strong>University: </strong> <select class="form-control" id="universityId" name="universityId">
+                        <option disabled selected value> Select an university.... </option>
+                        <?php foreach ($universities as $uni) : ?>
+                            <option value="<?php echo $uni['UniversityID']; ?>"><?php echo $uni['Name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
