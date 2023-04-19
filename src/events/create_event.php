@@ -18,12 +18,22 @@ if (isset($_POST['submit'])) {
     $contactPhone = ($_POST['contactPhone']);
     $contactEmail = ($_POST['contactEmail']);
     $eventType = ($_POST['eventType']);
-    $rsoID = null;
-    if ($eventType == 'rso')
-        $rsoID = ($_POST['rsoID']);
     $universityID = ($_SESSION["user_universityid"]);
+    $rsoID = null;
 
-    events_create_event($universityID, $eventName, $category, $description, $time, $date, $latitude, $longitude, $address, $contactPhone, $contactEmail, $eventType, $rsoID);
+    if ($eventType == 'rso') {
+
+        $rsoID = ($_POST['rsoID']);
+        $rso = orgs_get_rso($universityID, $rsoID);
+        if ($_SESSION["user_id"] != $rso["AdminID"]) {
+            $error = "You are not an admin of this RSO.";
+        }
+    }
+
+
+    //CHeck if they are an admin
+    if ($error == null)
+        events_create_event($universityID, $eventName, $category, $description, $time, $date, $latitude, $longitude, $address, $contactPhone, $contactEmail, $eventType, $rsoID);
 
 }
 
